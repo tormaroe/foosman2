@@ -6,10 +6,13 @@
   :license "MIT"
   :depends-on (#:hunchentoot 
                #:cl-who
-               #:smackjack 
+               #:parenscript
+               #:smackjack
                #:cl-mongo)
   :serial t
   :components ((:file "package")
                (:file "config")
+               (:file "model")
+               (:file "data")
                (:file "foosman2")))
 
