@@ -12,15 +12,14 @@
            #:player-doubles-won
            #:player-doubles-lost
            #:player-points-v1
-           #:player-to-json
-           ;#:player-collection
-           ;#:save-player
-           ;#:player-from-doc
-           ;#:player-find-all
-           ))
+           #:player-to-json))
 
 (defpackage #:foosman2-core.data
   (:use #:cl
+        #:chanl
+        #:alexandria
+        #:cl-arrows
         #:foosman2-core.model)
-  (:export #:save-player
+  (:export #:initialize-event-processor
+           #:command-add-player
            #:player-find-all))

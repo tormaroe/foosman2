@@ -4,7 +4,8 @@
   :description "Foosball management web application"
   :author "Torbjørn Marø <torbjorn.maro@gmail.com>"
   :license "MIT"
-  :depends-on (#:hunchentoot 
+  :depends-on (#:log4cl
+               #:hunchentoot 
                #:cl-who
                #:parenscript
                #:smackjack

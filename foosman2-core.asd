@@ -4,7 +4,11 @@
   :description "Foosball management core system"
   :author "Torbjørn Marø <torbjorn.maro@gmail.com>"
   :license "MIT"
-  :depends-on ()
+  :depends-on (#:log4cl
+               #:chanl
+               #:cl-ppcre
+               #:cl-arrows
+               #:alexandria)
   :serial t
   :components ((:file "core/package")
                (:file "core/config")

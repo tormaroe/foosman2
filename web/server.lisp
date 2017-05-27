@@ -13,6 +13,10 @@
 ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(log:config :nopretty)
+
+(initialize-event-processor)
+
 (defvar *app* 
   (start (make-instance 'easy-acceptor :port 8777)))
 
@@ -41,8 +45,8 @@
 
 (defun-ajax new-player (name) (*ajax-processor* :callback-data :response-text)
   (format t "~&API: new-player ~s~%" name)
-  ;; TODO: Ensure name uniqueness
-  (save-player (make-player :name name)))
+  (command-add-player name)
+  nil)
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
