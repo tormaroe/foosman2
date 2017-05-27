@@ -36,28 +36,12 @@
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun-ajax all-players () (*ajax-processor* :callback-data :json)
-  ;; TODO: make generic json transformation
   (format nil "[ ~{ ~a ~^, ~} ]"
-    (mapcar 
-      (lambda (p)
-        (format nil "{
-                       \"name\": ~s,
-                       \"singlesLost\": ~s,
-                       \"singlesWon\": ~s,
-                       \"doublesLost\": ~s,
-                       \"doublesWon\": ~s,
-                       \"pointsV1\": ~s
-                     }" 
-                     (player-name p)
-                     (player-singles-lost p)
-                     (player-singles-won p)
-                     (player-doubles-lost p)
-                     (player-doubles-won p)
-                     (player-points-v1 p))) 
-      (get-players))))
+          (mapcar #'player-to-json (player-find-all))))
 
 (defun-ajax new-player (name) (*ajax-processor* :callback-data :response-text)
   (format t "~&API: new-player ~s~%" name)
+  ;; TODO: Ensure name uniqueness
   (save-player (make-player :name name)))
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

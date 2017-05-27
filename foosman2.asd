@@ -13,6 +13,5 @@
   :components ((:file "package")
                (:file "config")
                (:file "model")
-               (:file "data")
                (:file "foosman2")))
 

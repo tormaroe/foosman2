@@ -12,14 +12,12 @@
            #:player-singles-lost
            #:player-doubles-won
            #:player-doubles-lost
-           #:player-points-v1))
-
-(defpackage #:foosman2.data
-  (:use #:cl 
-        #:cl-mongo
-        #:foosman2.model)
-  (:export #:save-player
-           #:get-players)) 
+           #:player-points-v1
+           #:player-to-json
+           #:player-collection
+           #:save-player
+           #:player-from-doc
+           #:player-find-all))
 
 (defpackage #:foosman2
   (:use #:cl
@@ -28,5 +26,4 @@
         #:parenscript
         #:smackjack 
         #:cl-mongo
-        #:foosman2.model
-        #:foosman2.data))
+        #:foosman2.model))
