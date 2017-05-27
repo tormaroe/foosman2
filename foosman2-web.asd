@@ -1,6 +1,6 @@
-;;;; foosman2.asd
+;;;; foosman2-core.asd
 
-(asdf:defsystem #:foosman2
+(asdf:defsystem #:foosman2-web
   :description "Foosball management web application"
   :author "Torbjørn Marø <torbjorn.maro@gmail.com>"
   :license "MIT"
@@ -8,10 +8,7 @@
                #:cl-who
                #:parenscript
                #:smackjack
-               #:cl-mongo)
+               #:foosman2-core)
   :serial t
-  :components ((:file "package")
-               (:file "config")
-               (:file "model")
-               (:file "foosman2")))
-
+  :components ((:file "web/package")
+               (:file "web/server")))

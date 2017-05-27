@@ -1,10 +1,10 @@
 ;;;; foosman2.lisp
 
-(in-package #:foosman2)
+(in-package #:foosman2-web.server)
 
 (defun resource-path (path)
   "looks up path relative to whereever this asdf system is installed.  Returns a truename"
-  (truename (asdf:system-relative-pathname :foosman2 path)))
+  (truename (asdf:system-relative-pathname :foosman2-web path)))
 
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,7 +17,7 @@
   (start (make-instance 'easy-acceptor :port 8777)))
 
 (defvar *static* 
-  (create-folder-dispatcher-and-handler "/static/" (resource-path "static")))
+  (create-folder-dispatcher-and-handler "/static/" (resource-path "web/static")))
 
 (defvar *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/api"))
