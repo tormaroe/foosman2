@@ -43,9 +43,21 @@
 
 (defmodel player
   ("name" . name)
-  ("singlesLost" . (singles-won 0 :type fixnum))
-  ("singlesWon" . (singles-lost 0 :type fixnum))
-  ("doublesLost" . (doubles-won 0 :type fixnum))
-  ("doublesWon" . (doubles-lost 0 :type fixnum))
+  ("singlesWon" . (singles-won 0 :type fixnum))
+  ("singlesLost" . (singles-lost 0 :type fixnum))
+  ("doublesWon" . (doubles-won 0 :type fixnum))
+  ("doublesLost" . (doubles-lost 0 :type fixnum))
   ("pointsV1" . (points-v1 0 :type fixnum)))
+
+(defmodel game-single
+  ("timestamp" . timestamp)
+  ("winner" . winner)
+  ("looser" . looser))
+
+(defmodel game-double
+  ("timestamp" . timestamp)
+  ("winnerPlayer1" . winner-player-1)
+  ("winnerPlayer2" . winner-player-2)
+  ("looserPlayer1" . looser-player-1)
+  ("looserPlayer2" . looser-player-2))
 

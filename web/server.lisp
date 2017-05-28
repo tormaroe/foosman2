@@ -44,8 +44,30 @@
           (mapcar #'player-to-json (player-find-all))))
 
 (defun-ajax new-player (name) (*ajax-processor* :callback-data :response-text)
-  (format t "~&API: new-player ~s~%" name)
+  (log:info name)
   (command-add-player name)
+  nil)
+
+(defun-ajax new-game-single (data) (*ajax-processor* :callback-data :response-text)
+  (log:info data)
+  (let (winner looser)
+    (dolist (x data)
+      (case (car x)
+        (:winner (setf winner (cdr x)))
+        (:looser (setf looser (cdr x)))))
+    (command-add-game-single winner looser))
+  nil)
+
+(defun-ajax new-game-double (data) (*ajax-processor* :callback-data :response-text)
+  (log:info data)
+  (let (winner1 winner2 looser1 looser2)
+    (dolist (x data)
+      (case (car x)
+        (:winner-1 (setf winner1 (cdr x)))
+        (:winner-2 (setf winner2 (cdr x)))
+        (:looser-1 (setf looser1 (cdr x)))
+        (:looser-2 (setf looser2 (cdr x)))))
+    (command-add-game-double winner1 winner2 looser1 looser2))
   nil)
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,6 +89,60 @@
             (:button :type "button" :class "btn btn-primary" :id "newPlayerSave" :|v-on:click| "saveNewPlayer"
               (str "Save"))))))))
 
+(defun new-game-single-form (s)
+  (with-html-output (s)
+    (:div :class "modal fade" :id "newGameSingleForm" :tabindex "-1" :role "dialog"
+      (:div :class "modal-dialog" :role "document"
+        (:div :class "modal-content"
+          (:div :class "modal-header"
+            (:h4 :class "modal-title" (str "New singles game")))
+          (:div :class "modal-body"
+            (:div :class "form-group"
+              (:label :for "winnerName" (str "Winner"))
+              (:select :id "winnerName" :v-model "newGameSingle.winner" :class "form-control"
+                (:option :v-for "p in players"
+                  (str "{{ p.name }}"))))
+            (:div :class "form-group"
+              (:label :for "looserName" (str "Looser"))
+              (:select :id "looserName" :v-model "newGameSingle.looser" :class "form-control"
+                (:option :v-for "p in players"
+                  (str "{{ p.name }}")))))
+          (:div :class "modal-footer"
+            (:button :type "button" :class "btn btn-primary" :id "newGameSingleSave" :|v-on:click| "saveNewGameSingle"
+              (str "Save"))))))))
+
+(defun new-game-double-form (s)
+  (with-html-output (s)
+    (:div :class "modal fade" :id "newGameDoubleForm" :tabindex "-1" :role "dialog"
+      (:div :class "modal-dialog" :role "document"
+        (:div :class "modal-content"
+          (:div :class "modal-header"
+            (:h4 :class "modal-title" (str "New doubles game")))
+          (:div :class "modal-body"
+            (:div :class "form-group"
+              (:label :for "winnerName1" (str "Winner 1"))
+              (:select :id "winnerName1" :v-model "newGameDouble.winner1" :class "form-control"
+                (:option :v-for "p in players"
+                  (str "{{ p.name }}"))))
+            (:div :class "form-group"
+              (:label :for "winnerName2" (str "Winner 2"))
+              (:select :id "winnerName2" :v-model "newGameDouble.winner2" :class "form-control"
+                (:option :v-for "p in players"
+                  (str "{{ p.name }}"))))
+            (:div :class "form-group"
+              (:label :for "looserName1" (str "Looser 1"))
+              (:select :id "looserName1" :v-model "newGameDouble.looser1" :class "form-control"
+                (:option :v-for "p in players"
+                  (str "{{ p.name }}"))))
+            (:div :class "form-group"
+              (:label :for "looserName2" (str "Looser 2"))
+              (:select :id "looserName2" :v-model "newGameDouble.looser2" :class "form-control"
+                (:option :v-for "p in players"
+                  (str "{{ p.name }}")))))
+          (:div :class "modal-footer"
+            (:button :type "button" :class "btn btn-primary" :id "newGameDoubleSave" :|v-on:click| "saveNewGameDouble"
+              (str "Save"))))))))
+
 (define-easy-handler (index :uri "/") ()
   (with-html-output-to-string (s)
     (:html
@@ -86,6 +162,8 @@
                   (:i :class "fa fa-futbol-o" :aria-hidden "true")
                   (str " FoosMan 2")))))
           (new-player-form s)
+          (new-game-single-form s)
+          (new-game-double-form s)
           (:div :class "container"
             (:div :class "row" :style "padding-bottom:15px;"
               (:div :class "well"
@@ -101,6 +179,7 @@
               (:table :class "table table-striped"
                 (:tr 
                   (:th (str "Player"))
+                  (:th :style "text-align:right" (str "Matches"))
                   (:th :style "text-align:right" (str "Singles Won"))
                   (:th :style "text-align:right" (str "Singles Lost"))
                   (:th :style "text-align:right" (str "Doubles won"))
@@ -108,6 +187,7 @@
                   (:th :style "text-align:right" (str "Points")))
                 (:tr :v-for "p in players"
                   (:td (str "{{ p.name }}"))
+                  (:td :style "text-align:right" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
                   (:td :style "text-align:right" (str "{{ p.singlesWon }}"))
                   (:td :style "text-align:right" (str "{{ p.singlesLost }}"))
                   (:td :style "text-align:right" (str "{{ p.doublesWon }}"))
