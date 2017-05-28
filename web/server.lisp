@@ -16,6 +16,7 @@
 (log:config :nopretty)
 
 (initialize-event-processor)
+(load-events)
 
 (defvar *app* 
   (start (make-instance 'easy-acceptor :port 8777)))

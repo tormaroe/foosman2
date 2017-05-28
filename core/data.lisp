@@ -18,8 +18,22 @@
 ;;; -----------------------------------------------------------------------------------------------
 
 (defparameter *players* ())
-(defparameter *games-single* ())
-(defparameter *games-double* ())
+(defparameter *games-single* ()) ; Needed?
+(defparameter *games-double* ()) ; Needed?
+
+
+;;; -----------------------------------------------------------------------------------------------
+;;; DATA QUERIES
+;;; -----------------------------------------------------------------------------------------------
+
+(defun player-find-all ()
+  *players*)
+
+(defun player-by-name (name)
+  (find name
+        *players*
+        :key #'player-name
+        :test #'string=))
 
 ;;; -----------------------------------------------------------------------------------------------
 ;;; DATA EVENT DEFINITIONS AND PROCESSING
@@ -30,11 +44,10 @@
 (defgeneric handle-event (event))
 
 ;; TODO: Pass explicit values through ajax
-;; TODO: Set initial points-v1 (separate package?) and adjust points-v1 when game
 ;; TODO: Each player keeps track of each other player and their relative "score"
 ;; TODO: validate new place name not blank (client side)
+;; TODO: validate unique players selected when registering match (client side)
 ;; TODO: Failure flash client side
-;; TODO: Load history
 ;; TODO: charts
 
 (defstruct event-player-added id player-name)
@@ -130,7 +143,7 @@
   (let ((e (recv *event-channel*)))
     (log:info "Received event" e)
     (handle-event e)
-    (when (null (slot-value e 'id))
+    (unless (slot-value e 'id)
       (setf (slot-value e 'id) 
             (incf *current-event-id*))
       (save-event-to-file e))
@@ -143,25 +156,13 @@
   (log:info "Setting up event channel and consumer done"))
 
 (defun load-events ()
-  ;; TODO: Read, deserialize and handle logged events
-  )
+  (log:info "Loading events stored at" *event-log-pathname*)
+  (with-input-from-file (stream *event-log-pathname* :external-format :UTF-8)
+    (loop for event = (read stream nil)
+          while event 
+          do (progn
+               (send *event-channel* event)
+               (setf *current-event-id*
+                     (slot-value event 'id)))))
+  (log:info "Loading events done." *current-event-id*))
 
-;;; -----------------------------------------------------------------------------------------------
-;;; DATA COMMANDS
-;;; -----------------------------------------------------------------------------------------------
-
-
-
-
-;;; -----------------------------------------------------------------------------------------------
-;;; DATA QUERIES
-;;; -----------------------------------------------------------------------------------------------
-
-(defun player-find-all ()
-  *players*)
-
-(defun player-by-name (name)
-  (find name
-        *players*
-        :key #'player-name
-        :test #'string=))

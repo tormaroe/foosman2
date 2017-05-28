@@ -41,6 +41,7 @@
         #:cl-arrows
         #:foosman2-core.model)
   (:export #:initialize-event-processor
+           #:load-events
            #:command-add-player
            #:command-add-game-single
            #:command-add-game-double
