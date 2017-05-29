@@ -116,6 +116,28 @@
                                       :timestamp (get-universal-time))))
       (log:warn "Can't find one of the players. TODO: Add UX feedback?"))))
 
+(defstruct event-manual-adjustment
+  id
+  timestamp
+  player
+  singles-won
+  singles-lost
+  doubles-won
+  doubles-lost
+  points-v1)
+
+(defmethod handle-event ((event event-manual-adjustment))
+  (let ((p (player-by-name (event-manual-adjustment-player event))))
+    (setf (player-singles-won p)
+          (event-manual-adjustment-singles-won event))
+    (setf (player-singles-lost p)
+          (event-manual-adjustment-singles-lost event))
+    (setf (player-doubles-won p)
+          (event-manual-adjustment-doubles-won event))
+    (setf (player-doubles-lost p)
+          (event-manual-adjustment-doubles-lost event))
+    (setf (player-points-v1 p)
+          (event-manual-adjustment-points-v1 event))))
 
 ;;; -----------------------------------------------------------------------------------------------
 ;;; EVENT MESSAGE PUMP
