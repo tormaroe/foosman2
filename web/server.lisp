@@ -180,19 +180,17 @@
               (:table :class "table table-striped"
                 (:tr 
                   (:th (str "Player"))
-                  (:th :style "text-align:right" (str "Matches"))
-                  (:th :style "text-align:right" (str "Singles Won"))
-                  (:th :style "text-align:right" (str "Singles Lost"))
-                  (:th :style "text-align:right" (str "Doubles won"))
-                  (:th :style "text-align:right" (str "Doubles lost"))
+                  (:th :style "text-align:right" (str "# Matches"))
+                  (:th :style "text-align:center" :colspan "2" (str "Singles"))
+                  (:th :style "text-align:center" :colspan "2" (str "Doubles"))
                   (:th :style "text-align:right" (str "Points")))
                 (:tr :v-for "p in players"
                   (:td (str "{{ p.name }}"))
                   (:td :style "text-align:right" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
-                  (:td :style "text-align:right" (str "{{ p.singlesWon }}"))
-                  (:td :style "text-align:right" (str "{{ p.singlesLost }}"))
-                  (:td :style "text-align:right" (str "{{ p.doublesWon }}"))
-                  (:td :style "text-align:right" (str "{{ p.doublesLost }}"))
+                  (:td :style "text-align:right" (str "{{ (p.singlesWon + p.singlesLost) > 0 ? Math.floor((p.singlesWon / (p.singlesWon + p.singlesLost)) * 100) : 0 }}%"))
+                  (:td :style "text-align:left" (str "{{ p.singlesWon }} - {{ p.singlesLost }}"))
+                  (:td :style "text-align:right" (str "{{ (p.doublesWon + p.doublesLost) > 0 ? Math.floor((p.doublesWon / (p.doublesWon + p.doublesLost)) * 100) : 0 }}%"))
+                  (:td :style "text-align:left" (str "{{ p.doublesWon }} - {{ p.doublesLost }}"))
                   (:td :style "text-align:right" (str "{{ p.pointsV1 }}")))))
             ) ; end container
           ) ; end vue app

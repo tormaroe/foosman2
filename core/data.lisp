@@ -179,6 +179,9 @@
 
 (defun load-events ()
   (log:info "Loading events stored at" *event-log-pathname*)
+  (setf *players* ())
+  (setf *games-single* ())
+  (setf *games-double* ())
   (with-input-from-file (stream *event-log-pathname* :external-format :UTF-8)
     (loop for event = (read stream nil)
           while event 

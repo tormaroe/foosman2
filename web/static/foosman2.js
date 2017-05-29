@@ -20,7 +20,9 @@ var foosman2App = new Vue({
     	refreshData: function () {
     		var that = this;
     		smackjack.allPlayers(function (res) {
-    			that.players = res;
+                that.players = res.sort(function (a, b) {
+                    return b.pointsV1 - a.pointsV1;
+                });
     		});
     	},
     	initiateNewPlayer: function () {
