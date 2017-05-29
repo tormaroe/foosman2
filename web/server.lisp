@@ -44,6 +44,10 @@
   (format nil "[ ~{ ~a ~^, ~} ]"
           (mapcar #'player-to-json (player-find-all))))
 
+(defun-ajax get-player-details (name) (*ajax-processor* :callback-data :json)
+  (log:info name)
+  (player-to-json (player-by-name name)))
+
 (defun-ajax new-player (name) (*ajax-processor* :callback-data :response-text)
   (log:info name)
   (command-add-player name)
@@ -144,6 +148,17 @@
             (:button :type "button" :class "btn btn-primary" :id "newGameDoubleSave" :|v-on:click| "saveNewGameDouble"
               (str "Save"))))))))
 
+(defun player-details (s)
+  (with-html-output (s)
+    (:div :class "row" :style "padding-bottom:15px;" :v-if "playerDetails"
+      (:div :class "panel panel-default"
+        (:div :class "panel-heading"
+          (:button :class "btn btn-danger btn-xs pull-right" :|v-on:click| "closeDetails"
+            (:i :class "fa fa-window-close-o" :aria-hidden "true"))
+          (:h3 :class "panel-title" (str "{{ playerDetails.name }}")))
+        (:div :class "panel-body"
+          (str "Player details coming here..."))))))
+
 (define-easy-handler (index :uri "/") ()
   (with-html-output-to-string (s)
     (:html
@@ -166,6 +181,7 @@
           (new-game-single-form s)
           (new-game-double-form s)
           (:div :class "container"
+            (player-details s)
             (:div :class "row" :style "padding-bottom:15px;"
               (:div :class "well"
                 (str "Chart placeholder")))
@@ -180,18 +196,20 @@
               (:table :class "table table-striped"
                 (:tr 
                   (:th (str "Player"))
-                  (:th :style "text-align:right" (str "# Matches"))
+                  (:th :style "text-align:center" (str "Points"))
+                  (:th :style "text-align:center" (str "# Matches"))
                   (:th :style "text-align:center" :colspan "2" (str "Singles"))
                   (:th :style "text-align:center" :colspan "2" (str "Doubles"))
-                  (:th :style "text-align:right" (str "Points")))
+                  )
                 (:tr :v-for "p in players"
-                  (:td (str "{{ p.name }}"))
-                  (:td :style "text-align:right" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
+                  (:td (:a :href "#" :|v-on:click| "displayPlayer(p.name)" (str "{{ p.name }}")))
+                  (:td :style "text-align:center" (str "{{ p.pointsV1 }}"))
+                  (:td :style "text-align:center" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
                   (:td :style "text-align:right" (str "{{ (p.singlesWon + p.singlesLost) > 0 ? Math.floor((p.singlesWon / (p.singlesWon + p.singlesLost)) * 100) : 0 }}%"))
                   (:td :style "text-align:left" (str "{{ p.singlesWon }} - {{ p.singlesLost }}"))
                   (:td :style "text-align:right" (str "{{ (p.doublesWon + p.doublesLost) > 0 ? Math.floor((p.doublesWon / (p.doublesWon + p.doublesLost)) * 100) : 0 }}%"))
                   (:td :style "text-align:left" (str "{{ p.doublesWon }} - {{ p.doublesLost }}"))
-                  (:td :style "text-align:right" (str "{{ p.pointsV1 }}")))))
+                  )))
             ) ; end container
           ) ; end vue app
         (:script :src "https://code.jquery.com/jquery-3.2.1.min.js"

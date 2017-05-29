@@ -14,7 +14,8 @@ var foosman2App = new Vue({
             looser1: "",
             looser2: ""
         },
-    	players: []
+    	players: [],
+        playerDetails: null
     },
     methods: {
     	refreshData: function () {
@@ -25,6 +26,15 @@ var foosman2App = new Vue({
                 });
     		});
     	},
+        displayPlayer: function (name) {
+            var that = this;
+            smackjack.getPlayerDetails(name, function (res) {
+                that.playerDetails = res;
+            });
+        },
+        closeDetails: function () {
+            this.playerDetails = null;
+        },
     	initiateNewPlayer: function () {
     		$("#newPlayerForm").modal("show");
     	},
