@@ -18,8 +18,6 @@
 ;;; -----------------------------------------------------------------------------------------------
 
 (defparameter *players* ())
-(defparameter *games-single* ()) ; Needed?
-(defparameter *games-double* ()) ; Needed?
 
 
 ;;; -----------------------------------------------------------------------------------------------
@@ -53,8 +51,8 @@
 (defstruct event-player-added id player-name)
 
 (defmethod handle-event ((event event-player-added))
-  (-> (make-player :name (event-player-added-player-name event)
-                   :points-v1 foosman2-core.points-v1:*initial-points*)
+  (-> (make-player :name (event-player-added-player-name event))
+      (set-points-v1 foosman2-core.points-v1:*initial-points*)
       (push *players*)))
 
 (defun command-add-player (name)
@@ -71,9 +69,7 @@
   (let* ((game (event-single-game-added-game event))
          (winner (player-by-name (game-single-winner game)))
          (looser (player-by-name (game-single-looser game))))
-    ;; TODO: register stuff on player history
-    (foosman2-core.points-v1:adjust-single-game winner looser)
-    (push game *games-single*)))
+    (foosman2-core.points-v1:adjust-single-game winner looser)))
 
 (defun command-add-game-single (winner-name looser-name)
   (log:info winner-name looser-name)
@@ -96,8 +92,7 @@
          (looser1 (player-by-name (game-double-looser-player-1 game)))
          (looser2 (player-by-name (game-double-looser-player-2 game))))
     ;; TODO: register stuff on player history
-    (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)
-    (push game *games-single*)))
+    (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)))
 
 (defun command-add-game-double (winner-name-1 winner-name-2 
                                 looser-name-1 looser-name-2)

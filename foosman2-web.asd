@@ -9,6 +9,7 @@
                #:cl-who
                #:parenscript
                #:smackjack
+               #:cl-arrows
                #:foosman2-core)
   :serial t
   :components ((:file "web/package")

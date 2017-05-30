@@ -12,21 +12,21 @@
            #:player-doubles-won
            #:player-doubles-lost
            #:player-points-v1
-           #:player-to-json
+           #:player-points-v1-max
+           #:player-points-v1-history
+           #:set-points-v1
            
            #:make-game-single
            #:game-single-timestamp
            #:game-single-winner
            #:game-single-looser
-           #:game-single-to-json
            
            #:make-game-double
            #:game-double-timestamp
            #:game-double-winner-player-1
            #:game-double-winner-player-2
            #:game-double-looser-player-1
-           #:game-double-looser-player-2
-           #:game-double-to-json))
+           #:game-double-looser-player-2))
 
 (defpackage #:foosman2-core.points-v1
   (:use #:cl #:foosman2-core.model)

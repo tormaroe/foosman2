@@ -4,6 +4,7 @@
   (:use #:cl
         #:hunchentoot 
         #:cl-who
+        #:cl-arrows
         #:parenscript
         #:smackjack 
         #:foosman2-core.model

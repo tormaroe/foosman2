@@ -15,8 +15,8 @@
         :small-favorite-won))))
 
 (defun adjust-players (winner looser amount)
-  (incf (player-points-v1 winner) amount)
-  (decf (player-points-v1 looser) amount))
+  (set-points-v1 winner (+ (player-points-v1 winner) amount))
+  (set-points-v1 looser (- (player-points-v1 looser) amount)))
 
 (defun get-team-points (p1 p2)
   (+ (max p1 p2)

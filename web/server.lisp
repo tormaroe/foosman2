@@ -40,9 +40,34 @@
 ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun json-array (xs)
+  (format nil "[~{~a~^,~}]" xs))
+
+(defun json-object (kvs)
+  "Accepts list of field name/value pairs, pre-formatted"
+  (->>
+    kvs
+    (mapcar (lambda (kv) 
+              (format nil "~s:~a" (car kv) (cdr kv))))
+    (format nil "{~{~a~^,~}}")))
+
+(defun player-to-json (p)
+  (json-object
+    `(("name" . ,(format nil "~s" (player-name p)))
+      ("singlesWon" . ,(player-singles-won p))
+      ("singlesLost" . ,(player-singles-lost p))
+      ("doublesWon" . ,(player-doubles-won p))
+      ("doublesLost" . ,(player-doubles-lost p))
+      ("pointsV1" . ,(player-points-v1 p))
+      ("pointsV1Max" . ,(player-points-v1-max p))
+      ("pointsV1History" . ,(json-array 
+                              (player-points-v1-history p))))))
+
 (defun-ajax all-players () (*ajax-processor* :callback-data :json)
-  (format nil "[ ~{ ~a ~^, ~} ]"
-          (mapcar #'player-to-json (player-find-all))))
+  (->>
+    (player-find-all)
+    (mapcar #'player-to-json)
+    (json-array)))
 
 (defun-ajax get-player-details (name) (*ajax-processor* :callback-data :json)
   (log:info name)
@@ -172,7 +197,7 @@
       (:body 
         (:div :id "foosman2App"
           (:nav :class "navbar navbar-default navbar-fixed-top"
-            (:div :class "container-fluid"
+            (:div :class "container"
               (:div :class "navbar-header"
                 (:a :class "navbar-brand" :href "#" 
                   (:i :class "fa fa-futbol-o" :aria-hidden "true")
