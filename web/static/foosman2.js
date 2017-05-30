@@ -39,6 +39,7 @@ var foosman2App = new Vue({
                     return b.pointsV1 - a.pointsV1;
                 });
     		});
+            // TODO: If playerDetails != null then re-load player data as well...
     	},
         displayPlayer: function (name) {
             var that = this;

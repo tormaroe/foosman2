@@ -182,10 +182,8 @@
             (:i :class "fa fa-window-close-o" :aria-hidden "true"))
           (:h3 :class "panel-title" (str "{{ playerDetails.name }}")))
         (:div :class "panel-body"
-          (:canvas :id "chartCanvas" :count "1" :height "80" :style "color:white;")
           (:chartjs-line
-            :target "chartCanvas"
-            ;:|:height| "80"
+            :|:height| "80"
             ;:|:width| "600"
             :|:bind| "true"
             :|:options| "chartoption"
@@ -201,7 +199,7 @@
              (:link :rel "stylesheet" :href "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
                                       :integrity "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
                                       :crossorigin "anonymous")
-             (:link :rel "stylesheet" :href "/static/bootstrap.superhero.min.css")
+             (:link :rel "stylesheet" :href "/static/bootstrap.flatly.min.css")
              (:link :rel "stylesheet" :href "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
              (:link :rel "stylesheet" :href "/static/foosman2.css"))
       (:body 
@@ -211,19 +209,19 @@
               (:div :class "navbar-header"
                 (:a :class "navbar-brand" :href "#" 
                   (:i :class "fa fa-futbol-o" :aria-hidden "true")
-                  (str " FoosMan 2")))))
+                  (str " FoosMan 2")))
+              (:ul :class "nav navbar-nav navbar-right"
+                (:li (:a :href "#" :|v-on:click| "initiateNewSingleGame"
+                  (str "Add match (single)")))
+                (:li (:a :href "#" :|v-on:click| "initiateNewDoubleGame"
+                  (str "Add match (double)")))
+                (:li (:a :href "#" :|v-on:click| "initiateNewPlayer"
+                  (str "Add new player"))))))
           (new-player-form s)
           (new-game-single-form s)
           (new-game-double-form s)
           (:div :class "container"
             (player-details s)
-            (:div :class "row" :style "padding-bottom:15px;"
-              (:button :class "btn btn-primary" :|v-on:click| "initiateNewSingleGame"
-                (str "Add match (single)"))
-              (:button :class "btn btn-primary" :|v-on:click| "initiateNewDoubleGame"
-                (str "Add match (double)"))
-              (:button :class "btn btn-default" :|v-on:click| "initiateNewPlayer"
-                (str "Add new player")))
             (:div :class "row"
               (:table :class "table table-striped"
                 (:tr 
