@@ -1,4 +1,4 @@
-// foosman2.js
+Vue.use(VueCharts);
 
 var foosman2App = new Vue({
     el: '#foosman2App',
@@ -15,7 +15,21 @@ var foosman2App = new Vue({
             looser2: ""
         },
     	players: [],
-        playerDetails: null
+        playerDetails: null,
+        chartoption:{
+            responsive:true,
+            maintainAspectRatio:true,
+            title: {
+                    display: false
+            },
+            scales: {
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        },
+        playerPointsV1History: [],
+        playerPointsV1Label: "Points V1"
     },
     methods: {
     	refreshData: function () {
@@ -30,6 +44,7 @@ var foosman2App = new Vue({
             var that = this;
             smackjack.getPlayerDetails(name, function (res) {
                 that.playerDetails = res;
+                that.playerPointsV1History = res.pointsV1History.reverse();
             });
         },
         closeDetails: function () {

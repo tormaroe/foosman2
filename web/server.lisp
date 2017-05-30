@@ -182,6 +182,16 @@
             (:i :class "fa fa-window-close-o" :aria-hidden "true"))
           (:h3 :class "panel-title" (str "{{ playerDetails.name }}")))
         (:div :class "panel-body"
+          (:canvas :id "chartCanvas" :count "1" :height "80" :style "color:white;")
+          (:chartjs-line
+            :target "chartCanvas"
+            ;:|:height| "80"
+            ;:|:width| "600"
+            :|:bind| "true"
+            :|:options| "chartoption"
+            :|:datalabel| "playerPointsV1Label"
+            :|:labels| "playerPointsV1History"
+            :|:data| "playerPointsV1History")
           (str "Player details coming here..."))))))
 
 (define-easy-handler (index :uri "/") ()
@@ -207,9 +217,6 @@
           (new-game-double-form s)
           (:div :class "container"
             (player-details s)
-            (:div :class "row" :style "padding-bottom:15px;"
-              (:div :class "well"
-                (str "Chart placeholder")))
             (:div :class "row" :style "padding-bottom:15px;"
               (:button :class "btn btn-primary" :|v-on:click| "initiateNewSingleGame"
                 (str "Add match (single)"))
@@ -244,5 +251,7 @@
                  :integrity "sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
                  :crossorigin "anonymous")
         (:script :src "https://unpkg.com/vue")
+        (:script :src "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js")
+        (:script :src "/static/vue-charts.js")
         (str (generate-prologue *ajax-processor*))
         (:script :src "/static/foosman2.js")))))
