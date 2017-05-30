@@ -14,9 +14,16 @@
         :huge-favorite-won
         :small-favorite-won))))
 
-(defun adjust-players (winner looser amount)
+(defun adjust-players (winner looser amount match-type)
   (set-points-v1 winner (+ (player-points-v1 winner) amount))
-  (set-points-v1 looser (- (player-points-v1 looser) amount)))
+  (set-points-v1 looser (- (player-points-v1 looser) amount))
+  (case match-type
+    (:single 
+      (incf (player-points-v1-singles winner) amount)
+      (decf (player-points-v1-singles looser) amount))
+    (:double 
+      (incf (player-points-v1-doubles winner) amount)
+      (decf (player-points-v1-doubles looser) amount))))
 
 (defun get-team-points (p1 p2)
   (+ (max p1 p2)
@@ -35,7 +42,7 @@
            (:small-favorite-won 5)
            (:huge-underdog-won 20)
            (:small-underdog-won 10))))
-    (adjust-players winner looser point-amount-to-adjust)))
+    (adjust-players winner looser point-amount-to-adjust :single)))
 
 (defun adjust-double-game (winner-player-1 winner-player-2
                            looser-player-1 looser-player-2)
@@ -54,5 +61,5 @@
             (:small-favorite-won 3)
             (:huge-underdog-won 10)
             (:small-underdog-won 5))))
-    (adjust-players winner-player-1 looser-player-1 point-amount-to-adjust)
-    (adjust-players winner-player-2 looser-player-2 point-amount-to-adjust)))
+    (adjust-players winner-player-1 looser-player-1 point-amount-to-adjust :double)
+    (adjust-players winner-player-2 looser-player-2 point-amount-to-adjust :double)))

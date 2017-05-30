@@ -59,7 +59,11 @@
       ("doublesWon" . ,(player-doubles-won p))
       ("doublesLost" . ,(player-doubles-lost p))
       ("pointsV1" . ,(player-points-v1 p))
+      ("pointsV1Singles" . ,(player-points-v1-singles p))
+      ("pointsV1Doubles" . ,(player-points-v1-doubles p))
       ("pointsV1Max" . ,(player-points-v1-max p))
+      ("pointsV1Min" . ,(player-points-v1-min p))
+      ("pointsV1Average" . ,(player-points-v1-average p))
       ("pointsV1History" . ,(json-array 
                               (player-points-v1-history p))))))
 
@@ -180,17 +184,36 @@
         (:div :class "panel-heading"
           (:button :class "btn btn-danger btn-xs pull-right" :|v-on:click| "closeDetails"
             (:i :class "fa fa-window-close-o" :aria-hidden "true"))
-          (:h3 :class "panel-title" (str "{{ playerDetails.name }}")))
+          (:h1 :class "panel-title" 
+            (str "{{ playerDetails.name }}")))
         (:div :class "panel-body"
+          (:h4
+            (:span :class "label label-success" 
+              (str "Max points: <b>{{ playerDetails.pointsV1Max }}</b>"))
+            (str " ")
+            (:span :class "label label-danger" 
+              (str "Min points: <b>{{ playerDetails.pointsV1Min }}</b>"))
+            (str " ")
+            (:span :class "label label-info" 
+              (str "Average points: <b>{{ playerDetails.pointsV1Average }}</b>"))
+            (str " ")
+            (:span :class "label label-default" 
+              (str "Current points: <b>{{ playerDetails.pointsV1 }}</b>"))
+            (str " ")
+            (:span :class "label label-default" 
+              (str "Singles points: <b>{{ playerDetails.pointsV1Singles }}</b>"))
+            (str " ")
+            (:span :class "label label-default" 
+              (str "Doubles points: <b>{{ playerDetails.pointsV1Doubles }}</b>"))
+              )
           (:chartjs-line
             :|:height| "80"
             ;:|:width| "600"
             :|:bind| "true"
             :|:options| "chartoption"
             :|:datalabel| "playerPointsV1Label"
-            :|:labels| "playerPointsV1History"
-            :|:data| "playerPointsV1History")
-          (str "Player details coming here..."))))))
+            :|:labels| "playerPointsV1Labels"
+            :|:data| "playerPointsV1History"))))))
 
 (define-easy-handler (index :uri "/") ()
   (with-html-output-to-string (s)
@@ -226,19 +249,23 @@
               (:table :class "table table-striped"
                 (:tr 
                   (:th (str "Player"))
-                  (:th :style "text-align:center" (str "Points"))
                   (:th :style "text-align:center" (str "# Matches"))
-                  (:th :style "text-align:center" :colspan "2" (str "Singles"))
-                  (:th :style "text-align:center" :colspan "2" (str "Doubles"))
+                  (:th :style "text-align:center" (str "Points"))
+                  (:th :style "text-align:center" :colspan "3" (str "Singles"))
+                  (:th :style "text-align:center" :colspan "3" (str "Doubles"))
                   )
                 (:tr :v-for "p in players"
                   (:td (:a :href "#" :|v-on:click| "displayPlayer(p.name)" (str "{{ p.name }}")))
-                  (:td :style "text-align:center" (str "{{ p.pointsV1 }}"))
                   (:td :style "text-align:center" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
+                  (:td :style "text-align:center" (str "{{ p.pointsV1 }}"))
+                  
                   (:td :style "text-align:right" (str "{{ (p.singlesWon + p.singlesLost) > 0 ? Math.floor((p.singlesWon / (p.singlesWon + p.singlesLost)) * 100) : 0 }}%"))
-                  (:td :style "text-align:left" (str "{{ p.singlesWon }} - {{ p.singlesLost }}"))
+                  (:td :style "text-align:center" (str "{{ p.singlesWon }} - {{ p.singlesLost }}"))
+                  (:td :style "text-align:left" (str "{{ p.pointsV1Singles }}p"))
+
                   (:td :style "text-align:right" (str "{{ (p.doublesWon + p.doublesLost) > 0 ? Math.floor((p.doublesWon / (p.doublesWon + p.doublesLost)) * 100) : 0 }}%"))
-                  (:td :style "text-align:left" (str "{{ p.doublesWon }} - {{ p.doublesLost }}"))
+                  (:td :style "text-align:center" (str "{{ p.doublesWon }} - {{ p.doublesLost }}"))
+                  (:td :style "text-align:left" (str "{{ p.pointsV1Doubles }}p"))
                   )))
             ) ; end container
           ) ; end vue app

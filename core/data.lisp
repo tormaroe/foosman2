@@ -41,17 +41,28 @@
 
 (defgeneric handle-event (event))
 
-;; TODO: Pass explicit values through ajax
-;; TODO: Each player keeps track of each other player and their relative "score"
+;; TODO: Each player keeps track of each other player and their relative "score". Display best team mate, nemesis, etc.
 ;; TODO: validate new place name not blank (client side)
 ;; TODO: validate unique players selected when registering match (client side)
 ;; TODO: Failure flash client side
-;; TODO: charts
+
+;; TODO: Badges: When adjusting points, do a pass and award badges. Badges are never lost, but each badge is awarded only once.
+;;       Badge has ICON, DATE, DESCRIPTION. Examples:
+;;  - Highest total score (at a point in time) (minimum X matches)
+;;  - Highest average score (minimum X matches)
+;;  - Highest number of matches (minimum X matches)
+;;  - Highest score singles (minimum X single matches)
+;;  - Highest score doubles (minimum X double matches)
+;;  -
+;;  -
 
 (defstruct event-player-added id player-name)
 
 (defmethod handle-event ((event event-player-added))
-  (-> (make-player :name (event-player-added-player-name event))
+  (-> (make-player :name (event-player-added-player-name event)
+                   :points-v1-min foosman2-core.points-v1:*initial-points*
+                   :points-v1-singles foosman2-core.points-v1:*initial-points*
+                   :points-v1-doubles foosman2-core.points-v1:*initial-points*)
       (set-points-v1 foosman2-core.points-v1:*initial-points*)
       (push *players*)))
 

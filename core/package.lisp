@@ -12,7 +12,11 @@
            #:player-doubles-won
            #:player-doubles-lost
            #:player-points-v1
+           #:player-points-v1-singles
+           #:player-points-v1-doubles
            #:player-points-v1-max
+           #:player-points-v1-min
+           #:player-points-v1-average
            #:player-points-v1-history
            #:set-points-v1
            

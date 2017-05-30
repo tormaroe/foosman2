@@ -29,6 +29,7 @@ var foosman2App = new Vue({
             }
         },
         playerPointsV1History: [],
+        playerPointsV1Labels: [],
         playerPointsV1Label: "Points V1"
     },
     methods: {
@@ -46,6 +47,7 @@ var foosman2App = new Vue({
             smackjack.getPlayerDetails(name, function (res) {
                 that.playerDetails = res;
                 that.playerPointsV1History = res.pointsV1History.reverse();
+                that.playerPointsV1Labels = Array.apply(null, Array(that.playerPointsV1History.length)).map(String.prototype.valueOf,""); // Hacketyhack :P
             });
         },
         closeDetails: function () {
