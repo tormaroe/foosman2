@@ -51,23 +51,36 @@
               (format nil "~s:~a" (car kv) (cdr kv))))
     (format nil "{~{~a~^,~}}")))
 
-(defun player-to-json (p)
-  (json-object
-    `(("name" . ,(format nil "~s" (player-name p)))
-      ("singlesWon" . ,(player-singles-won p))
-      ("singlesLost" . ,(player-singles-lost p))
-      ("doublesWon" . ,(player-doubles-won p))
-      ("doublesLost" . ,(player-doubles-lost p))
-      ("pointsV1" . ,(player-points-v1 p))
-      ("pointsV1SinglesPart" . ,(player-points-v1-singles-part p))
-      ("pointsV1DoublesPart" . ,(player-points-v1-doubles-part p))
-      ("pointsV1Singles" . ,(player-points-v1-singles p))
-      ("pointsV1Doubles" . ,(player-points-v1-doubles p))
-      ("pointsV1Max" . ,(player-points-v1-max p))
-      ("pointsV1Min" . ,(player-points-v1-min p))
-      ("pointsV1Average" . ,(player-points-v1-average p))
-      ("pointsV1History" . ,(json-array 
-                              (player-points-v1-history p))))))
+(defun badges-to-json (badges)
+  (json-array
+    (mapcar (lambda (x)
+              (json-object `(("title" . ,(format nil "~s" (badge-title x)))
+                             ("description" . ,(format nil "~s" (badge-description x)))
+                             ("class" . ,(format nil "~s" (badge-class x))))))
+            badges)))
+
+(defun player-to-json (p &key include-details)
+  (let ((slots
+         `(("name" . ,(format nil "~s" (player-name p)))
+           ("singlesWon" . ,(player-singles-won p))
+           ("singlesLost" . ,(player-singles-lost p))
+           ("doublesWon" . ,(player-doubles-won p))
+           ("doublesLost" . ,(player-doubles-lost p))
+           ("pointsV1" . ,(player-points-v1 p))
+           ("pointsV1SinglesPart" . ,(player-points-v1-singles-part p))
+           ("pointsV1DoublesPart" . ,(player-points-v1-doubles-part p))
+           ("pointsV1Singles" . ,(player-points-v1-singles p))
+           ("pointsV1Doubles" . ,(player-points-v1-doubles p))
+           ("pointsV1Max" . ,(player-points-v1-max p))
+           ("pointsV1Min" . ,(player-points-v1-min p))
+           ("pointsV1Average" . ,(player-points-v1-average p))
+           ("badgeCount" . ,(length (player-badges p))))))
+    (when include-details
+      (push (cons "pointsV1History" (json-array (player-points-v1-history p)))
+            slots)
+      (push (cons "badges" (badges-to-json (player-badges p)))
+            slots))
+    (json-object slots)))
 
 (defun-ajax all-players () (*ajax-processor* :callback-data :json)
   (->>
@@ -77,7 +90,8 @@
 
 (defun-ajax get-player-details (name) (*ajax-processor* :callback-data :json)
   (log:info name)
-  (player-to-json (player-by-name name)))
+  (player-to-json (player-by-name name)
+                  :include-details t))
 
 (defun-ajax new-player (name) (*ajax-processor* :callback-data :response-text)
   (log:info name)
@@ -189,6 +203,17 @@
           (:h1 :class "panel-title" 
             (str "{{ playerDetails.name }}")))
         (:div :class "panel-body"
+
+          (:div :v-if "playerDetails.badgeCount > 0"
+            (:div :v-for "b in playerDetails.badges"
+                  :class "alert alert-success"
+                  :role "alert"
+              (:p 
+                (:i :|v-bind:class| "b.class" :class "pull-right" :style "font-size:30pt;" :aria-hidden "true")
+                (:strong (str " {{ b.title }} ")))
+              (:p
+                (str "{{ b.description }}"))))
+
           (:chartjs-line
             :|:height| "80"
             ;:|:width| "600"
@@ -197,7 +222,7 @@
             :|:datalabel| "playerPointsV1Label"
             :|:labels| "playerPointsV1Labels"
             :|:data| "playerPointsV1History")
-          
+
           (:p
             (str "Max score: ")
             (:span :class "label label-success" 
@@ -258,6 +283,7 @@
                   (:th :style "text-align:center" (str "Points"))
                   (:th :style "text-align:center" :colspan "3" (str "Singles"))
                   (:th :style "text-align:center" :colspan "3" (str "Doubles"))
+                  (:th :style "text-align:center" (:i :class "fa fa-certificate" :aria-hidden "true"))
                   )
                 (:tr :v-for "p in players"
                   (:td (:a :href "#" :|v-on:click| "displayPlayer(p.name)" (str "{{ p.name }}")))
@@ -271,6 +297,8 @@
                   (:td :style "text-align:right" (str "{{ (p.doublesWon + p.doublesLost) > 0 ? Math.floor((p.doublesWon / (p.doublesWon + p.doublesLost)) * 100) : 0 }}%"))
                   (:td :style "text-align:center" (str "{{ p.doublesWon }} - {{ p.doublesLost }}"))
                   (:td :style "text-align:left" (str "{{ p.pointsV1Doubles }}p"))
+
+                  (:td :style "text-align:center" (:span :class "badge" :v-if "p.badgeCount > 0" (str "{{ p.badgeCount }}")))
                   )))
             ) ; end container
           ) ; end vue app

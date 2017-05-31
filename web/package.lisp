@@ -8,4 +8,5 @@
         #:parenscript
         #:smackjack 
         #:foosman2-core.model
+        #:foosman2-core.badges
         #:foosman2-core.data))

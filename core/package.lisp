@@ -20,6 +20,8 @@
            #:player-points-v1-min
            #:player-points-v1-average
            #:player-points-v1-history
+           #:player-badges
+           #:player-match-count
            #:set-points-v1
            
            #:make-game-single
@@ -40,12 +42,20 @@
            #:adjust-single-game
            #:adjust-double-game))
 
+(defpackage #:foosman2-core.badges
+  (:use #:cl #:foosman2-core.model)
+  (:export #:award-badges
+           #:badge-title
+           #:badge-description
+           #:badge-class))
+
 (defpackage #:foosman2-core.data
   (:use #:cl
         #:chanl
         #:alexandria
         #:cl-arrows
-        #:foosman2-core.model)
+        #:foosman2-core.model
+        #:foosman2-core.badges)
   (:export #:initialize-event-processor
            #:load-events
            #:command-add-player

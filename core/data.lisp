@@ -46,15 +46,6 @@
 ;; TODO: validate unique players selected when registering match (client side)
 ;; TODO: Failure flash client side
 
-;; TODO: Badges: When adjusting points, do a pass and award badges. Badges are never lost, but each badge is awarded only once.
-;;       Badge has ICON, DATE, DESCRIPTION. Examples:
-;;  - "Numero Uno": Highest total score (at a point in time) (minimum X matches)
-;;  - "Solid": Highest average score (minimum X matches)
-;;  - "Eager Beaver": Highest number of matches (minimum X matches)
-;;  - "Individualist": Highest score singles (minimum X single matches)
-;;  - "Team Player": Highest score doubles (minimum X double matches)
-;;  - "Winning Streak"
-;;  -
 
 (defstruct event-player-added id player-name)
 
@@ -80,7 +71,8 @@
   (let* ((game (event-single-game-added-game event))
          (winner (player-by-name (game-single-winner game)))
          (looser (player-by-name (game-single-looser game))))
-    (foosman2-core.points-v1:adjust-single-game winner looser)))
+    (foosman2-core.points-v1:adjust-single-game winner looser)
+    (award-badges *players* (game-single-timestamp game))))
 
 (defun command-add-game-single (winner-name looser-name)
   (log:info winner-name looser-name)
@@ -102,8 +94,8 @@
          (winner2 (player-by-name (game-double-winner-player-2 game)))
          (looser1 (player-by-name (game-double-looser-player-1 game)))
          (looser2 (player-by-name (game-double-looser-player-2 game))))
-    ;; TODO: register stuff on player history
-    (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)))
+    (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)
+    (award-badges *players* (game-double-timestamp game))))
 
 (defun command-add-game-double (winner-name-1 winner-name-2 
                                 looser-name-1 looser-name-2)

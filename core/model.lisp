@@ -22,7 +22,8 @@
   (points-v1-max 0 :type fixnum)
   (points-v1-min 0 :type fixnum)
   (points-v1-average 0 :type fixnum)
-  (points-v1-history ()))
+  (points-v1-history ())
+  (badges ()))
 
 (defstruct game-single 
   timestamp 
@@ -35,6 +36,12 @@
   winner-player-2 
   looser-player-1 
   looser-player-2)
+
+(defun player-match-count (p)
+  (+ (player-singles-won p)
+     (player-singles-lost p)
+     (player-doubles-won p)
+     (player-doubles-lost p)))
 
 (defun average (list) 
   (floor (reduce #'+ list)

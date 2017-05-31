@@ -14,4 +14,5 @@
                (:file "core/config")
                (:file "core/model")
                (:file "core/points-v1")
+               (:file "core/badges")
                (:file "core/data")))
