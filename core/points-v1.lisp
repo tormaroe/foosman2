@@ -19,11 +19,19 @@
   (set-points-v1 looser (- (player-points-v1 looser) amount))
   (case match-type
     (:single 
-      (incf (player-points-v1-singles winner) amount)
-      (decf (player-points-v1-singles looser) amount))
+      (incf (player-points-v1-singles-part winner) amount)
+      (decf (player-points-v1-singles-part looser) amount))
     (:double 
-      (incf (player-points-v1-doubles winner) amount)
-      (decf (player-points-v1-doubles looser) amount))))
+      (incf (player-points-v1-doubles-part winner) amount)
+      (decf (player-points-v1-doubles-part looser) amount))))
+
+(defun adjust-players-single-only (winner looser amount)
+  (incf (player-points-v1-singles winner) amount)
+  (decf (player-points-v1-singles looser) amount))
+
+(defun adjust-players-double-only (winner looser amount)
+  (incf (player-points-v1-doubles winner) amount)
+  (decf (player-points-v1-doubles looser) amount))
 
 (defun get-team-points (p1 p2)
   (+ (max p1 p2)
@@ -42,7 +50,17 @@
            (:small-favorite-won 5)
            (:huge-underdog-won 20)
            (:small-underdog-won 10))))
-    (adjust-players winner looser point-amount-to-adjust :single)))
+    (adjust-players winner looser point-amount-to-adjust :single))
+  ;; DUPLICATION
+  (let ((point-amount-to-adjust 
+         (case (get-result-category (player-points-v1-singles winner)
+                                    (player-points-v1-singles looser))
+           (:huge-favorite-won 0)
+           (:small-favorite-won 5)
+           (:huge-underdog-won 20)
+           (:small-underdog-won 10))))
+    (adjust-players-single-only winner looser point-amount-to-adjust)))
+
 
 (defun adjust-double-game (winner-player-1 winner-player-2
                            looser-player-1 looser-player-2)
@@ -62,4 +80,18 @@
             (:huge-underdog-won 10)
             (:small-underdog-won 5))))
     (adjust-players winner-player-1 looser-player-1 point-amount-to-adjust :double)
-    (adjust-players winner-player-2 looser-player-2 point-amount-to-adjust :double)))
+    (adjust-players winner-player-2 looser-player-2 point-amount-to-adjust :double))
+  ;; DUPLICATION
+  (let* ((winner-team-points (get-team-points (player-points-v1-doubles winner-player-1)
+                                              (player-points-v1-doubles winner-player-2)))
+         (looser-team-points (get-team-points (player-points-v1-doubles looser-player-1)
+                                              (player-points-v1-doubles looser-player-2)))
+         (point-amount-to-adjust 
+          (case (get-result-category winner-team-points
+                                     looser-team-points)
+            (:huge-favorite-won 0)
+            (:small-favorite-won 3)
+            (:huge-underdog-won 10)
+            (:small-underdog-won 5))))
+    (adjust-players-double-only winner-player-1 looser-player-1 point-amount-to-adjust)
+    (adjust-players-double-only winner-player-2 looser-player-2 point-amount-to-adjust)))

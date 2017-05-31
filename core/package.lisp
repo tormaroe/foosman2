@@ -12,6 +12,8 @@
            #:player-doubles-won
            #:player-doubles-lost
            #:player-points-v1
+           #:player-points-v1-singles-part
+           #:player-points-v1-doubles-part
            #:player-points-v1-singles
            #:player-points-v1-doubles
            #:player-points-v1-max

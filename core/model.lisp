@@ -15,6 +15,8 @@
   (doubles-won 0 :type fixnum)
   (doubles-lost 0 :type fixnum)
   (points-v1 0 :type fixnum)
+  (points-v1-singles-part 0 :type fixnum)
+  (points-v1-doubles-part 0 :type fixnum)
   (points-v1-singles 0 :type fixnum)
   (points-v1-doubles 0 :type fixnum)
   (points-v1-max 0 :type fixnum)

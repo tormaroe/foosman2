@@ -48,12 +48,12 @@
 
 ;; TODO: Badges: When adjusting points, do a pass and award badges. Badges are never lost, but each badge is awarded only once.
 ;;       Badge has ICON, DATE, DESCRIPTION. Examples:
-;;  - Highest total score (at a point in time) (minimum X matches)
-;;  - Highest average score (minimum X matches)
-;;  - Highest number of matches (minimum X matches)
-;;  - Highest score singles (minimum X single matches)
-;;  - Highest score doubles (minimum X double matches)
-;;  -
+;;  - "Numero Uno": Highest total score (at a point in time) (minimum X matches)
+;;  - "Solid": Highest average score (minimum X matches)
+;;  - "Eager Beaver": Highest number of matches (minimum X matches)
+;;  - "Individualist": Highest score singles (minimum X single matches)
+;;  - "Team Player": Highest score doubles (minimum X double matches)
+;;  - "Winning Streak"
 ;;  -
 
 (defstruct event-player-added id player-name)

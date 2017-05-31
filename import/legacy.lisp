@@ -9,7 +9,7 @@
 
 (defparameter *players-filepath* "C:/dev/foosman2/data/players.xml")
 (defparameter *audittrail-filepath* "C:/dev/foosman2/data/audittrail.xml")
-(setf foosman2-core.data::*event-log-pathname* "c:/temp/foosball2.test.events")
+(setf foosman2-core.data::*event-log-pathname* "c:/temp/foosball2.events")
 
 (defun parse-xml (filepath)
   (with-input-from-file (stream filepath :external-format :UTF-8)

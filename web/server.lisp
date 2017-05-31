@@ -59,6 +59,8 @@
       ("doublesWon" . ,(player-doubles-won p))
       ("doublesLost" . ,(player-doubles-lost p))
       ("pointsV1" . ,(player-points-v1 p))
+      ("pointsV1SinglesPart" . ,(player-points-v1-singles-part p))
+      ("pointsV1DoublesPart" . ,(player-points-v1-doubles-part p))
       ("pointsV1Singles" . ,(player-points-v1-singles p))
       ("pointsV1Doubles" . ,(player-points-v1-doubles p))
       ("pointsV1Max" . ,(player-points-v1-max p))
@@ -187,25 +189,6 @@
           (:h1 :class "panel-title" 
             (str "{{ playerDetails.name }}")))
         (:div :class "panel-body"
-          (:h4
-            (:span :class "label label-success" 
-              (str "Max points: <b>{{ playerDetails.pointsV1Max }}</b>"))
-            (str " ")
-            (:span :class "label label-danger" 
-              (str "Min points: <b>{{ playerDetails.pointsV1Min }}</b>"))
-            (str " ")
-            (:span :class "label label-info" 
-              (str "Average points: <b>{{ playerDetails.pointsV1Average }}</b>"))
-            (str " ")
-            (:span :class "label label-default" 
-              (str "Current points: <b>{{ playerDetails.pointsV1 }}</b>"))
-            (str " ")
-            (:span :class "label label-default" 
-              (str "Singles points: <b>{{ playerDetails.pointsV1Singles }}</b>"))
-            (str " ")
-            (:span :class "label label-default" 
-              (str "Doubles points: <b>{{ playerDetails.pointsV1Doubles }}</b>"))
-              )
           (:chartjs-line
             :|:height| "80"
             ;:|:width| "600"
@@ -213,7 +196,29 @@
             :|:options| "chartoption"
             :|:datalabel| "playerPointsV1Label"
             :|:labels| "playerPointsV1Labels"
-            :|:data| "playerPointsV1History"))))))
+            :|:data| "playerPointsV1History")
+          
+          (:p
+            (str "Max score: ")
+            (:span :class "label label-success" 
+              (str "{{ playerDetails.pointsV1Max }}"))
+            (str " Min score: ")
+            (:span :class "label label-danger" 
+              (str "{{ playerDetails.pointsV1Min }}"))
+            (str " Average: ")
+            (:span :class "label label-info" 
+              (str "{{ playerDetails.pointsV1Average }}")))
+          (:p
+            (str "Overall: <b>{{ playerDetails.pointsV1 }}</b> points ({{ playerDetails.pointsV1SinglesPart }} from single matches and {{ playerDetails.pointsV1DoublesPart }} from doubles)."))
+          (:p
+            (str "Singles: <b>{{ playerDetails.pointsV1Singles }}</b> points, 
+              {{ (playerDetails.singlesWon + playerDetails.singlesLost) > 0 ? Math.floor((playerDetails.singlesWon / (playerDetails.singlesWon + playerDetails.singlesLost)) * 100) : 0 }}% win rate."))
+          (:p
+            (str "Doubles: <b>{{ playerDetails.pointsV1Doubles }}</b> points,
+              {{ (playerDetails.doublesWon + playerDetails.doublesLost) > 0 ? Math.floor((playerDetails.doublesWon / (playerDetails.doublesWon + playerDetails.doublesLost)) * 100) : 0 }}% win rate."))
+              
+
+          )))))
 
 (define-easy-handler (index :uri "/") ()
   (with-html-output-to-string (s)
