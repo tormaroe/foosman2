@@ -7,5 +7,6 @@ sbcl --eval "(ql:quickload :foosman2-web)" \
      	       :toplevel #'foosman2-web.server:start-foosman2-daemon \
      	       :executable t)"
 
-cp -r web/static build
+mkdir build/web
+cp -r web/static build/web
 cp foosman2.config build

@@ -2,9 +2,12 @@
 
 (in-package #:foosman2-web.server)
 
+(defparameter *root* "")
+
 (defun resource-path (path)
   "looks up path relative to whereever this asdf system is installed.  Returns a truename"
-  (truename (asdf:system-relative-pathname :foosman2-web path)))
+  ;(truename (asdf:system-relative-pathname :foosman2-web path)))
+  (truename (concatenate 'string *root* path)))
 
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16,15 +19,8 @@
 (defvar *app* 
   (make-instance 'easy-acceptor :port 8777))
 
-(defvar *static* 
-  (create-folder-dispatcher-and-handler "/static/" (resource-path "web/static")))
-
 (defvar *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/api"))
-
-(setq *dispatch-table* (list 'dispatch-easy-handlers
-                             *static*
-                             (create-ajax-dispatcher *ajax-processor*)))
 
 (setf *js-string-delimiter* #\")
 
@@ -36,7 +32,17 @@
       (log:info "Logging to ~a" (getf config :debug-log-pathname))
       (setf *event-log-pathname*
             (getf config :event-log-pathname))
-      (log:info *event-log-pathname*))))
+      (log:info *event-log-pathname*)
+      (setf *root*
+            (getf config :root))
+      (log:info *root*)))
+
+  (defvar *static* 
+    (create-folder-dispatcher-and-handler "/static/" (resource-path "web/static/")))
+    
+  (setq *dispatch-table* (list 'dispatch-easy-handlers
+                               *static*
+                               (create-ajax-dispatcher *ajax-processor*))))
 
 (defun start-foosman2 ()
   (load-config)
