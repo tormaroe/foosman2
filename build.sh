@@ -8,4 +8,4 @@ sbcl --eval "(ql:quickload :foosman2-web)" \
      	       :executable t)"
 
 cp -r web/static build
-cp foosman.config build
+cp foosman2.config build
