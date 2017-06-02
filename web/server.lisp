@@ -13,8 +13,6 @@
 ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(log:config :nopretty)
-
 (defvar *app* 
   (make-instance 'easy-acceptor :port 8777))
 
@@ -30,7 +28,18 @@
 
 (setf *js-string-delimiter* #\")
 
+(defun load-config ()
+  (with-input-from-file (stream (resource-path "foosman2.config") :external-format :UTF-8)
+    (let ((config (read stream t)))
+      (log:config :daily (getf config :debug-log-pathname)
+                  :nopretty)
+      (log:info "Logging to ~a" (getf config :debug-log-pathname))
+      (setf *event-log-pathname*
+            (getf config :event-log-pathname))
+      (log:info *event-log-pathname*))))
+
 (defun start-foosman2 ()
+  (load-config)
   (log:info "Starting server")
   (initialize-event-processor)
   (load-events)

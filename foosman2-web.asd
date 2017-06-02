@@ -5,6 +5,7 @@
   :author "Torbjørn Marø <torbjorn.maro@gmail.com>"
   :license "MIT"
   :depends-on (#:log4cl
+               #:alexandria
                #:hunchentoot 
                #:cl-who
                #:parenscript

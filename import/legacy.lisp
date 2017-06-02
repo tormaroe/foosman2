@@ -100,3 +100,7 @@
     (mapcar #'foosman2-core.data::save-event-to-file))
   :done)
 
+(defun run-import ()
+  (load-players)
+  (load-audittrail)
+  :DONE)

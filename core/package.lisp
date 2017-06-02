@@ -58,6 +58,7 @@
         #:foosman2-core.badges)
   (:export #:initialize-event-processor
            #:load-events
+           #:*event-log-pathname*
            #:command-add-player
            #:command-add-game-single
            #:command-add-game-double
