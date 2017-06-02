@@ -1,5 +1,4 @@
 rm -rf build
-
 mkdir build
 
 sbcl --eval "(ql:quickload :foosman2-web)" \
@@ -8,4 +7,5 @@ sbcl --eval "(ql:quickload :foosman2-web)" \
      	       :toplevel #'foosman2-web.server::start-foosman2-daemon \
      	       :executable t)"
 
-cp web/static build
+cp -r web/static build
+cp foosman.config build
