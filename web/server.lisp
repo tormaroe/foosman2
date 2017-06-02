@@ -15,11 +15,8 @@
 
 (log:config :nopretty)
 
-(initialize-event-processor)
-(load-events)
-
 (defvar *app* 
-  (start (make-instance 'easy-acceptor :port 8777)))
+  (make-instance 'easy-acceptor :port 8777))
 
 (defvar *static* 
   (create-folder-dispatcher-and-handler "/static/" (resource-path "web/static")))
@@ -32,6 +29,22 @@
                              (create-ajax-dispatcher *ajax-processor*)))
 
 (setf *js-string-delimiter* #\")
+
+(defun start-foosman2 ()
+  (log:info "Starting server")
+  (initialize-event-processor)
+  (load-events)
+  (start *app*)
+  (log:info "Server started"))
+
+(defun start-foosman2-daemon ()
+  (start-foosman2)
+  (sb-thread:join-thread
+    (find-if (lambda (th) 
+               (search "hunchentoot-listener" 
+                       (sb-thread:thread-name th)))
+             (sb-thread:list-all-threads))))
+
 
 
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
