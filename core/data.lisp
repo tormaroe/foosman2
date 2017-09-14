@@ -18,7 +18,7 @@
 ;;; -----------------------------------------------------------------------------------------------
 
 (defparameter *players* ())
-
+(defparameter *games* ())
 
 ;;; -----------------------------------------------------------------------------------------------
 ;;; DATA QUERIES
@@ -32,6 +32,11 @@
         *players*
         :key #'player-name
         :test #'string=))
+
+(defun games-by-player (name)
+  (remove-if (lambda (g)
+               (not (played-in-game-p g name)))
+             *games*))
 
 ;;; -----------------------------------------------------------------------------------------------
 ;;; DATA EVENT DEFINITIONS AND PROCESSING
@@ -72,7 +77,8 @@
          (winner (player-by-name (game-single-winner game)))
          (looser (player-by-name (game-single-looser game))))
     (foosman2-core.points-v1:adjust-single-game winner looser)
-    (award-badges *players* (game-single-timestamp game))))
+    (award-badges *players* (game-single-timestamp game))
+    (push game *games*)))
 
 (defun command-add-game-single (winner-name looser-name)
   (log:info winner-name looser-name)

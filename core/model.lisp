@@ -59,3 +59,15 @@
   (setf (player-points-v1-average player)
         (average (player-points-v1-history player)))
   player)
+
+(defgeneric played-in-game-p (game player))
+
+(defmethod played-in-game-p ((game game-single) player)
+  (or (string= player (game-single-winner game))
+      (string= player (game-single-looser game))))
+
+(defmethod played-in-game-p ((game game-double) player)
+  (or (string= player (game-double-winner-1 game))
+      (string= player (game-double-winner-2 game))
+      (string= player (game-double-looser-1 game))
+      (string= player (game-double-looser-2 game))))

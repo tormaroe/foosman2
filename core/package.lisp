@@ -34,7 +34,9 @@
            #:game-double-winner-player-1
            #:game-double-winner-player-2
            #:game-double-looser-player-1
-           #:game-double-looser-player-2))
+           #:game-double-looser-player-2
+
+           #:played-in-game-p))
 
 (defpackage #:foosman2-core.points-v1
   (:use #:cl #:foosman2-core.model)
