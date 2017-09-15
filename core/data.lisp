@@ -101,7 +101,8 @@
          (looser1 (player-by-name (game-double-looser-player-1 game)))
          (looser2 (player-by-name (game-double-looser-player-2 game))))
     (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)
-    (award-badges *players* (game-double-timestamp game))))
+    (award-badges *players* (game-double-timestamp game))
+    (push game *games*)))
 
 (defun command-add-game-double (winner-name-1 winner-name-2 
                                 looser-name-1 looser-name-2)

@@ -94,6 +94,13 @@
                  ("winner" . ,(format nil "~s" (game-single-winner game)))
                  ("looser" . ,(format nil "~s" (game-single-looser game))))))
 
+(defmethod game-to-json ((game game-double))
+  (json-object `(("timestamp" . ,(game-double-timestamp game))
+                 ("winner" . ,(format nil "\"~a / ~a\"" (game-double-winner-player-1 game)
+                                                        (game-double-winner-player-2 game)))
+                 ("looser" . ,(format nil "\"~a / ~a\"" (game-double-looser-player-1 game)
+                                                        (game-double-looser-player-2 game))))))
+
 (defun games-to-json (games)
   (json-array
     (mapcar #'game-to-json games)))

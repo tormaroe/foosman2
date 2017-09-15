@@ -75,7 +75,7 @@
       (string= player (game-single-looser game))))
 
 (defmethod played-in-game-p ((game game-double) player)
-  (or (string= player (game-double-winner-1 game))
-      (string= player (game-double-winner-2 game))
-      (string= player (game-double-looser-1 game))
-      (string= player (game-double-looser-2 game))))
+  (or (string= player (game-double-winner-player-1 game))
+      (string= player (game-double-winner-player-2 game))
+      (string= player (game-double-looser-player-1 game))
+      (string= player (game-double-looser-player-2 game))))
