@@ -3,6 +3,7 @@ Vue.use(VueCharts);
 var foosman2App = new Vue({
     el: '#foosman2App',
     data: {
+        showOnlyActivePlayers: true,
     	newPlayerName: "",
         newGameSingle: {
             winner: "",
@@ -14,6 +15,8 @@ var foosman2App = new Vue({
             looser1: "",
             looser2: ""
         },
+        /* playersCopy: The original set of all players, unfiltered */
+        playersCopy: [],
     	players: [],
         playerDetails: null,
         matches: null,
@@ -37,12 +40,28 @@ var foosman2App = new Vue({
     	refreshData: function () {
     		var that = this;
     		smackjack.allPlayers(function (res) {
-                that.players = res.sort(function (a, b) {
+                that.playersCopy = res.sort(function (a, b) {
                     return b.pointsV1 - a.pointsV1;
                 });
+                that.applyActivePlayersFilter();
     		});
             // TODO: If playerDetails != null then re-load player data as well...
     	},
+        applyActivePlayersFilter: function () {
+            if (this.showOnlyActivePlayers) {
+                this.players = _.filter(this.playersCopy, function (p) { 
+                    return p.active;
+                });
+                console.log("Only active");
+            } else {
+                this.players = this.playersCopy;
+                console.log("All");
+            }
+        },
+        toggleActivePlayerFilter: function () {
+            this.showOnlyActivePlayers = !this.showOnlyActivePlayers;
+            this.applyActivePlayersFilter();
+        },
         displayPlayer: function (name) {
             var that = this;
             smackjack.getPlayerDetails(name, function (res) {

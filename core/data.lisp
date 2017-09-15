@@ -79,9 +79,11 @@
 (defmethod handle-event ((event event-single-game-added))
   (let* ((game (event-single-game-added-game event))
          (winner (player-by-name (game-single-winner game)))
-         (looser (player-by-name (game-single-looser game))))
+         (looser (player-by-name (game-single-looser game)))
+         (timestamp (game-single-timestamp game)))
+    (update-last-active-timestamp timestamp (list winner looser))
     (foosman2-core.points-v1:adjust-single-game winner looser)
-    (award-badges *players* (game-single-timestamp game))
+    (award-badges *players* timestamp)
     (push game *games*)))
 
 (defun command-add-game-single (winner-name looser-name)
@@ -103,9 +105,11 @@
          (winner1 (player-by-name (game-double-winner-player-1 game)))
          (winner2 (player-by-name (game-double-winner-player-2 game)))
          (looser1 (player-by-name (game-double-looser-player-1 game)))
-         (looser2 (player-by-name (game-double-looser-player-2 game))))
+         (looser2 (player-by-name (game-double-looser-player-2 game)))
+         (timestamp (game-double-timestamp game)))
+    (update-last-active-timestamp timestamp (list winner1 winner2 looser1 looser2))
     (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)
-    (award-badges *players* (game-double-timestamp game))
+    (award-badges *players* timestamp)
     (push game *games*)))
 
 (defun command-add-game-double (winner-name-1 winner-name-2 

@@ -10,6 +10,7 @@
 
 (defstruct player
   name
+  (last-active 0 :type fixnum)
   (singles-won 0 :type fixnum)
   (singles-lost 0 :type fixnum)
   (doubles-won 0 :type fixnum)
@@ -44,6 +45,16 @@
 
 (defmethod game-timestamp ((game game-double))
   (game-double-timestamp game))
+
+(defun update-last-active-timestamp (timestamp px)
+  (loop for p in px
+     do (setf (player-last-active p) timestamp)))
+
+(defun player-active-p (p)
+  (<= (- (get-universal-time)
+         (player-last-active p))
+      2592000 ; Number of seconds in a month
+      ))
 
 (defun player-match-count (p)
   (+ (player-singles-won p)

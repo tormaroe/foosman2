@@ -24,7 +24,10 @@
            #:player-badges
            #:player-match-count
            #:set-points-v1
-           
+           #:player-active-p
+           #:update-last-active-timestamp
+
+
            #:game-single
            #:make-game-single
            #:game-single-timestamp

@@ -68,6 +68,9 @@
 ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun json-bool (x)
+  (if x "true" "false"))
+
 (defun json-array (xs)
   (format nil "[~{~a~^,~}]" xs))
 
@@ -108,6 +111,7 @@
 (defun player-to-json (p &key include-details)
   (let ((slots
          `(("name" . ,(format nil "~s" (player-name p)))
+           ("active" . ,(json-bool (player-active-p p)))
            ("singlesWon" . ,(player-singles-won p))
            ("singlesLost" . ,(player-singles-lost p))
            ("doublesWon" . ,(player-doubles-won p))
@@ -204,12 +208,12 @@
             (:div :class "form-group"
               (:label :for "winnerName" (str "Winner"))
               (:select :id "winnerName" :v-model "newGameSingle.winner" :class "form-control"
-                (:option :v-for "p in players"
+                (:option :v-for "p in playersCopy"
                   (str "{{ p.name }}"))))
             (:div :class "form-group"
               (:label :for "looserName" (str "Looser"))
               (:select :id "looserName" :v-model "newGameSingle.looser" :class "form-control"
-                (:option :v-for "p in players"
+                (:option :v-for "p in playersCopy"
                   (str "{{ p.name }}")))))
           (:div :class "modal-footer"
             (:button :type "button" :class "btn btn-primary" :id "newGameSingleSave" :|v-on:click| "saveNewGameSingle"
@@ -226,22 +230,22 @@
             (:div :class "form-group"
               (:label :for "winnerName1" (str "Winner 1"))
               (:select :id "winnerName1" :v-model "newGameDouble.winner1" :class "form-control"
-                (:option :v-for "p in players"
+                (:option :v-for "p in playersCopy"
                   (str "{{ p.name }}"))))
             (:div :class "form-group"
               (:label :for "winnerName2" (str "Winner 2"))
               (:select :id "winnerName2" :v-model "newGameDouble.winner2" :class "form-control"
-                (:option :v-for "p in players"
+                (:option :v-for "p in playersCopy"
                   (str "{{ p.name }}"))))
             (:div :class "form-group"
               (:label :for "looserName1" (str "Looser 1"))
               (:select :id "looserName1" :v-model "newGameDouble.looser1" :class "form-control"
-                (:option :v-for "p in players"
+                (:option :v-for "p in playersCopy"
                   (str "{{ p.name }}"))))
             (:div :class "form-group"
               (:label :for "looserName2" (str "Looser 2"))
               (:select :id "looserName2" :v-model "newGameDouble.looser2" :class "form-control"
-                (:option :v-for "p in players"
+                (:option :v-for "p in playersCopy"
                   (str "{{ p.name }}")))))
           (:div :class "modal-footer"
             (:button :type "button" :class "btn btn-primary" :id "newGameDoubleSave" :|v-on:click| "saveNewGameDouble"
@@ -361,6 +365,9 @@
             (player-details s)
             (match-list s)
             (:div :class "row"
+              (:button :type "button" :class "btn btn-default btn-xs" 
+                :|v-on:click| "toggleActivePlayerFilter"
+                (str "Toggle showing active players only"))
               (:table :class "table table-striped"
                 (:tr 
                   (:th (str "Player"))
@@ -400,6 +407,7 @@
         (:script :src "https://unpkg.com/vue")
         (:script :src "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js")
         (:script :src "/static/vue-charts.js")
+        (:script :src "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js")
         (:script :src "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js")
         (str (generate-prologue *ajax-processor*))
         (:script :src "/static/foosman2.js")))))
