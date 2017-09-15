@@ -24,17 +24,21 @@
            #:player-match-count
            #:set-points-v1
            
+           #:game-single
            #:make-game-single
            #:game-single-timestamp
            #:game-single-winner
            #:game-single-looser
-           
+ 
+           #:game-double          
            #:make-game-double
            #:game-double-timestamp
            #:game-double-winner-player-1
            #:game-double-winner-player-2
            #:game-double-looser-player-1
            #:game-double-looser-player-2
+
+           #:game-timestamp
 
            #:played-in-game-p))
 
@@ -65,4 +69,5 @@
            #:command-add-game-single
            #:command-add-game-double
            #:player-find-all
-           #:player-by-name))
+           #:player-by-name
+           #:games-by-player))

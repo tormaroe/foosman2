@@ -37,6 +37,14 @@
   looser-player-1 
   looser-player-2)
 
+(defgeneric game-timestamp (game))
+
+(defmethod game-timestamp ((game game-single))
+  (game-single-timestamp game))
+
+(defmethod game-timestamp ((game game-double))
+  (game-double-timestamp game))
+
 (defun player-match-count (p)
   (+ (player-singles-won p)
      (player-singles-lost p)

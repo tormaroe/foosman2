@@ -87,6 +87,17 @@
                              ("class" . ,(format nil "~s" (badge-class x))))))
             badges)))
 
+(defgeneric game-to-json (game))
+
+(defmethod game-to-json ((game game-single))
+  (json-object `(("timestamp" . ,(game-single-timestamp game))
+                 ("winner" . ,(format nil "~s" (game-single-winner game)))
+                 ("looser" . ,(format nil "~s" (game-single-looser game))))))
+
+(defun games-to-json (games)
+  (json-array
+    (mapcar #'game-to-json games)))
+
 (defun player-to-json (p &key include-details)
   (let ((slots
          `(("name" . ,(format nil "~s" (player-name p)))
@@ -107,7 +118,12 @@
       (push (cons "pointsV1History" (json-array (player-points-v1-history p)))
             slots)
       (push (cons "badges" (badges-to-json (player-badges p)))
-            slots))
+            slots)
+      (let* ((games (games-by-player (player-name p)))
+             (games (subseq games 0 (min (length games) 9)))
+             (games (sort games #'> :key #'game-timestamp)))
+        (push (cons "recentGames" (games-to-json games))
+              slots)))
     (json-object slots)))
 
 (defun-ajax all-players () (*ajax-processor* :callback-data :json)
