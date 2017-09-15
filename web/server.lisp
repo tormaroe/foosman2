@@ -254,17 +254,6 @@
           (:h1 :class "panel-title" 
             (str "{{ playerDetails.name }}")))
         (:div :class "panel-body"
-
-          (:div :v-if "playerDetails.badgeCount > 0"
-            (:div :v-for "b in playerDetails.badges"
-                  :class "alert alert-success"
-                  :role "alert"
-              (:p 
-                (:i :|v-bind:class| "b.class" :class "pull-right" :style "font-size:30pt;" :aria-hidden "true")
-                (:strong (str " {{ b.title }} ")))
-              (:p
-                (str "{{ b.description }}"))))
-
           (:chartjs-line
             :|:height| "80"
             ;:|:width| "600"
@@ -294,11 +283,20 @@
               (:p
                 (str "Doubles: <b>{{ playerDetails.pointsV1Doubles }}</b> points,
                   {{ (playerDetails.doublesWon + playerDetails.doublesLost) > 0 ? Math.floor((playerDetails.doublesWon / (playerDetails.doublesWon + playerDetails.doublesLost)) * 100) : 0 }}% win rate."))
+            
+            (:div :v-if "playerDetails.badgeCount > 0"
+              (:table :class "table table-sm table-striped"
+                (:tr 
+                  (:th :colspan "2" (str "Badges")))
+                (:tr :v-for "b in playerDetails.badges"
+                  (:td (:i :|v-bind:class| "b.class" :aria-hidden "true"))
+                  (:td (:strong (str "{{ b.title }}")))
+                  (:td (str "{{ b.description }}")))))
             )
             (:div :class "col-md-6" 
               (:table :class "table table-sm table-striped"
                 (:tr
-                  (:th (str "Last matches")))
+                  (:th :colspan "3" (str "Last matches")))
                 (:tr :v-for "g in playerDetails.recentGames"
                   (:td (str "{{ g.timestamp | timestampToString }}"))
                   (:td (str "{{ g.winner }}"))
