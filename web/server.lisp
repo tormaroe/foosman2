@@ -274,27 +274,37 @@
             :|:labels| "playerPointsV1Labels"
             :|:data| "playerPointsV1History")
 
-          (:p
-            (str "Max score: ")
-            (:span :class "label label-success" 
-              (str "{{ playerDetails.pointsV1Max }}"))
-            (str " Min score: ")
-            (:span :class "label label-danger" 
-              (str "{{ playerDetails.pointsV1Min }}"))
-            (str " Average: ")
-            (:span :class "label label-info" 
-              (str "{{ playerDetails.pointsV1Average }}")))
-          (:p
-            (str "Overall: <b>{{ playerDetails.pointsV1 }}</b> points ({{ playerDetails.pointsV1SinglesPart }} from single matches and {{ playerDetails.pointsV1DoublesPart }} from doubles)."))
-          (:p
-            (str "Singles: <b>{{ playerDetails.pointsV1Singles }}</b> points, 
-              {{ (playerDetails.singlesWon + playerDetails.singlesLost) > 0 ? Math.floor((playerDetails.singlesWon / (playerDetails.singlesWon + playerDetails.singlesLost)) * 100) : 0 }}% win rate."))
-          (:p
-            (str "Doubles: <b>{{ playerDetails.pointsV1Doubles }}</b> points,
-              {{ (playerDetails.doublesWon + playerDetails.doublesLost) > 0 ? Math.floor((playerDetails.doublesWon / (playerDetails.doublesWon + playerDetails.doublesLost)) * 100) : 0 }}% win rate."))
-              
-
-          )))))
+          (:div :class "row"
+            (:div :class "col-md-6"            
+              (:p
+                (str "Max score: ")
+                (:span :class "label label-success" 
+                  (str "{{ playerDetails.pointsV1Max }}"))
+                (str " Min score: ")
+                (:span :class "label label-danger" 
+                  (str "{{ playerDetails.pointsV1Min }}"))
+                (str " Average: ")
+                (:span :class "label label-info" 
+                  (str "{{ playerDetails.pointsV1Average }}")))
+              (:p
+                (str "Overall: <b>{{ playerDetails.pointsV1 }}</b> points ({{ playerDetails.pointsV1SinglesPart }} from single matches and {{ playerDetails.pointsV1DoublesPart }} from doubles)."))
+              (:p
+                (str "Singles: <b>{{ playerDetails.pointsV1Singles }}</b> points, 
+                  {{ (playerDetails.singlesWon + playerDetails.singlesLost) > 0 ? Math.floor((playerDetails.singlesWon / (playerDetails.singlesWon + playerDetails.singlesLost)) * 100) : 0 }}% win rate."))
+              (:p
+                (str "Doubles: <b>{{ playerDetails.pointsV1Doubles }}</b> points,
+                  {{ (playerDetails.doublesWon + playerDetails.doublesLost) > 0 ? Math.floor((playerDetails.doublesWon / (playerDetails.doublesWon + playerDetails.doublesLost)) * 100) : 0 }}% win rate."))
+            )
+            (:div :class "col-md-6" 
+              (:table :class "table table-sm table-striped"
+                (:tr
+                  (:th (str "Last matches")))
+                (:tr :v-for "g in playerDetails.recentGames"
+                  (:td (str "{{ g.timestamp | timestampToString }}"))
+                  (:td (str "{{ g.winner }}"))
+                  (:td (str "{{ g.looser }}")))))
+          )
+        )))))
 
 (define-easy-handler (index :uri "/") ()
   (with-html-output-to-string (s)
@@ -362,5 +372,6 @@
         (:script :src "https://unpkg.com/vue")
         (:script :src "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.js")
         (:script :src "/static/vue-charts.js")
+        (:script :src "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js")
         (str (generate-prologue *ajax-processor*))
         (:script :src "/static/foosman2.js")))))

@@ -94,4 +94,10 @@ var foosman2App = new Vue({
     mounted: function () {
         this.refreshData();
     },
+    filters: {
+        timestampToString: function (date) {
+            // Get date/time representation from a Common Lisp epoc timestamp
+            return moment.unix(date - 2208988800).format('DD.MM.YYYY HH:mm');
+        }
+    }
 });
