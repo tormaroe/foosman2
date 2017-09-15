@@ -120,6 +120,7 @@
            ("pointsV1Max" . ,(player-points-v1-max p))
            ("pointsV1Min" . ,(player-points-v1-min p))
            ("pointsV1Average" . ,(player-points-v1-average p))
+           ("pointsV1Diff" . ,(player-points-v1-diff p))
            ("badgeCount" . ,(length (player-badges p))))))
     (when include-details
       (push (cons "pointsV1History" (json-array (player-points-v1-history p)))
@@ -364,6 +365,7 @@
                   (:th (str "Player"))
                   (:th :style "text-align:center" (str "# Matches"))
                   (:th :style "text-align:center" (str "Points"))
+                  (:th :style "text-align:center" (str "&Delta;"))
                   (:th :style "text-align:center" :colspan "3" (str "Singles"))
                   (:th :style "text-align:center" :colspan "3" (str "Doubles"))
                   (:th :style "text-align:center" (:i :class "fa fa-certificate" :aria-hidden "true"))
@@ -372,12 +374,13 @@
                   (:td (:a :href "#" :|v-on:click| "displayPlayer(p.name)" (str "{{ p.name }}")))
                   (:td :style "text-align:center" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
                   (:td :style "text-align:center" (str "{{ p.pointsV1 }}"))
+                  (:td :style "text-align:center" (str "{{ p.pointsV1Diff | withSign }}"))
                   
-                  (:td :style "text-align:right" (str "{{ (p.singlesWon + p.singlesLost) > 0 ? Math.floor((p.singlesWon / (p.singlesWon + p.singlesLost)) * 100) : 0 }}%"))
+                  (:td :style "text-align:right; border-left:solid 1px silver;" (str "{{ (p.singlesWon + p.singlesLost) > 0 ? Math.floor((p.singlesWon / (p.singlesWon + p.singlesLost)) * 100) : 0 }}%"))
                   (:td :style "text-align:center" (str "{{ p.singlesWon }} - {{ p.singlesLost }}"))
                   (:td :style "text-align:left" (str "{{ p.pointsV1Singles }}p"))
 
-                  (:td :style "text-align:right" (str "{{ (p.doublesWon + p.doublesLost) > 0 ? Math.floor((p.doublesWon / (p.doublesWon + p.doublesLost)) * 100) : 0 }}%"))
+                  (:td :style "text-align:right; border-left:solid 1px silver;" (str "{{ (p.doublesWon + p.doublesLost) > 0 ? Math.floor((p.doublesWon / (p.doublesWon + p.doublesLost)) * 100) : 0 }}%"))
                   (:td :style "text-align:center" (str "{{ p.doublesWon }} - {{ p.doublesLost }}"))
                   (:td :style "text-align:left" (str "{{ p.pointsV1Doubles }}p"))
 

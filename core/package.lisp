@@ -20,6 +20,7 @@
            #:player-points-v1-min
            #:player-points-v1-average
            #:player-points-v1-history
+           #:player-points-v1-diff
            #:player-badges
            #:player-match-count
            #:set-points-v1

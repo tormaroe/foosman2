@@ -51,6 +51,13 @@
      (player-doubles-won p)
      (player-doubles-lost p)))
 
+(defun player-points-v1-diff (p)
+  (let ((history (player-points-v1-history p)))
+    (if (> (length history) 1)
+      (- (car history)
+         (cadr history))
+      0)))
+
 (defun average (list) 
   (floor (reduce #'+ list)
          (length list)))
