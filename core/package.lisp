@@ -70,4 +70,5 @@
            #:command-add-game-double
            #:player-find-all
            #:player-by-name
-           #:games-by-player))
+           #:games-by-player
+           #:recent-games))

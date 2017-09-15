@@ -33,10 +33,14 @@
         :key #'player-name
         :test #'string=))
 
-(defun games-by-player (name)
-  (remove-if (lambda (g)
-               (not (played-in-game-p g name)))
-             *games*))
+(defun games-by-player (name count)
+  (let  ((games (remove-if (lambda (g)
+                             (not (played-in-game-p g name)))
+                           *games*)))
+    (subseq games 0 (min (length games) count))))
+
+(defun recent-games (count)
+  (subseq *games* 0 count))
 
 ;;; -----------------------------------------------------------------------------------------------
 ;;; DATA EVENT DEFINITIONS AND PROCESSING

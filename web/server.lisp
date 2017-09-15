@@ -126,11 +126,8 @@
             slots)
       (push (cons "badges" (badges-to-json (player-badges p)))
             slots)
-      (let* ((games (games-by-player (player-name p)))
-             (games (subseq games 0 (min (length games) 9)))
-             (games (sort games #'> :key #'game-timestamp)))
-        (push (cons "recentGames" (games-to-json games))
-              slots)))
+      (push (cons "recentGames" (games-to-json (games-by-player (player-name p) 10)))
+            slots))
     (json-object slots)))
 
 (defun-ajax all-players () (*ajax-processor* :callback-data :json)
@@ -138,6 +135,10 @@
     (player-find-all)
     (mapcar #'player-to-json)
     (json-array)))
+
+(defun-ajax matches (count) (*ajax-processor* :callback-data :json)
+  (log:info count)
+  (games-to-json (recent-games count)))
 
 (defun-ajax get-player-details (name) (*ajax-processor* :callback-data :json)
   (log:info name)
@@ -244,6 +245,26 @@
             (:button :type "button" :class "btn btn-primary" :id "newGameDoubleSave" :|v-on:click| "saveNewGameDouble"
               (str "Save"))))))))
 
+(defun match-list (s)
+  (with-html-output (s)
+    (:div :class "row" :style "padding-bottom:15px;" :v-if "matches"
+      (:div :class "panel panel-default"
+        (:div :class "panel-heading"
+          (:button :class "btn btn-danger btn-xs pull-right" :|v-on:click| "closeMatchList"
+            (:i :class "fa fa-window-close-o" :aria-hidden "true"))
+          (:h1 :class "panel-title" 
+            (str "Latest matches")))
+        (:div :class "panel-body"
+          (:table :class "table table-sm table-striped"
+                (:tr
+                  (:th (str "When"))
+                  (:th (str "Winner(s)"))
+                  (:th (str "Looser(s)")))
+                (:tr :v-for "g in matches"
+                  (:td (str "{{ g.timestamp | timestampToString }}"))
+                  (:td (str "{{ g.winner }}"))
+                  (:td (str "{{ g.looser }}")))))))))
+
 (defun player-details (s)
   (with-html-output (s)
     (:div :class "row" :style "padding-bottom:15px;" :v-if "playerDetails"
@@ -328,12 +349,15 @@
                 (:li (:a :href "#" :|v-on:click| "initiateNewDoubleGame"
                   (str "Add match (double)")))
                 (:li (:a :href "#" :|v-on:click| "initiateNewPlayer"
-                  (str "Add new player"))))))
+                  (str "Add new player")))
+                (:li (:a :href "#" :|v-on:click| "listMatches"
+                  (str "Matches"))))))
           (new-player-form s)
           (new-game-single-form s)
           (new-game-double-form s)
           (:div :class "container"
             (player-details s)
+            (match-list s)
             (:div :class "row"
               (:table :class "table table-striped"
                 (:tr 

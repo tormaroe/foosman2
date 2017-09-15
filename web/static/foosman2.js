@@ -16,6 +16,7 @@ var foosman2App = new Vue({
         },
     	players: [],
         playerDetails: null,
+        matches: null,
         chartoption:{
             responsive:true,
             maintainAspectRatio:true,
@@ -52,6 +53,15 @@ var foosman2App = new Vue({
         },
         closeDetails: function () {
             this.playerDetails = null;
+        },
+        listMatches: function () {
+            var that = this;
+            smackjack.matches(20, function (res) {
+                that.matches = res;
+            });
+        },
+        closeMatchList: function () {
+            this.matches = null;
         },
     	initiateNewPlayer: function () {
     		$("#newPlayerForm").modal("show");
