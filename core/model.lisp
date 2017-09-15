@@ -51,11 +51,11 @@
      (player-doubles-won p)
      (player-doubles-lost p)))
 
-(defun player-points-v1-diff (p)
+(defun player-points-v1-diff (p &optional (span 2))
   (let ((history (player-points-v1-history p)))
-    (if (> (length history) 1)
-      (- (car history)
-         (cadr history))
+    (if (>= (length history) span)
+      (- (nth 0 history)
+         (nth (- span 1) history))
       0)))
 
 (defun average (list) 
