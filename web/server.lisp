@@ -371,7 +371,7 @@
               (:table :class "table table-striped"
                 (:tr 
                   (:th (str "Player"))
-                  (:th :style "text-align:center" (str "# Matches"))
+                  ;(:th :style "text-align:center" (str "# Matches"))
                   (:th :style "text-align:center" (str "Points"))
                   (:th :style "text-align:center" (str "&Delta;"))
                   (:th :style "text-align:center" (str "&Delta;5"))
@@ -381,7 +381,7 @@
                   )
                 (:tr :v-for "p in players"
                   (:td (:a :href "#" :|v-on:click| "displayPlayer(p.name)" (str "{{ p.name }}")))
-                  (:td :style "text-align:center" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
+                  ;(:td :style "text-align:center" (str "{{ p.singlesWon + p.singlesLost + p.doublesWon + p.doublesLost }}"))
                   (:td :style "text-align:center" (str "{{ p.pointsV1 }}"))
                   (:td :style "text-align:center" (str "{{ p.pointsV1Diff | withSign }}"))
                   (:td :style "text-align:center" (str "{{ p.pointsV1Diff5 | withSign }}"))
