@@ -8,6 +8,9 @@
 ;;;
 ;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+;;; - PLAYER --------------------------------------------------------------------------------------
+
 (defstruct player
   name
   (last-active 0 :type fixnum)
@@ -27,36 +30,6 @@
   (badges ())
   (team-mates (make-hash-table :test #'equal)))
 
-(defstruct team-mate
-  name
-  (won 0 :type fixnum)
-  (lost 0 :type fixnum)
-  (score-changes ()))
-
-(defstruct game-single 
-  timestamp 
-  winner 
-  looser)
-
-(defstruct game-double 
-  timestamp 
-  winner-player-1 
-  winner-player-2 
-  looser-player-1 
-  looser-player-2)
-
-(defun team-mate-game-count (x)
-  (+ (team-mate-won x)
-     (team-mate-lost x)))
-
-(defgeneric game-timestamp (game))
-
-(defmethod game-timestamp ((game game-single))
-  (game-single-timestamp game))
-
-(defmethod game-timestamp ((game game-double))
-  (game-double-timestamp game))
-
 (defun update-last-active-timestamp (timestamp px)
   (loop for p in px
      do (setf (player-last-active p) timestamp)))
@@ -73,14 +46,6 @@
       (incf (team-mate-lost team-mate)))
     (setf (gethash team-mate-name team-mates)
           team-mate)))
-
-#|
-
-(let ((hashtab (foosman2-core.model::player-team-mates (nth 3 foosman2-core.data::*players*))))
-  (loop for key being the hash-keys of hashtab
-        do (format t "~a ~a~%" key (gethash key hashtab)))) ;; TODO: make it an average?
-
-|#
 
 (defun update-team-mates (p1 p2 score-change &key winners)
   (let ((score-change (if winners 
@@ -124,6 +89,40 @@
   (setf (player-points-v1-average player)
         (average (player-points-v1-history player)))
   player)
+
+;;; - TEAM-MATE -----------------------------------------------------------------------------------
+
+(defstruct team-mate
+  name
+  (won 0 :type fixnum)
+  (lost 0 :type fixnum)
+  (score-changes ()))
+
+(defun team-mate-game-count (x)
+  (+ (team-mate-won x)
+     (team-mate-lost x)))
+
+;;; - GAME ----------------------------------------------------------------------------------------
+
+(defstruct game-single 
+  timestamp 
+  winner 
+  looser)
+
+(defstruct game-double 
+  timestamp 
+  winner-player-1 
+  winner-player-2 
+  looser-player-1 
+  looser-player-2)
+
+(defgeneric game-timestamp (game))
+
+(defmethod game-timestamp ((game game-single))
+  (game-single-timestamp game))
+
+(defmethod game-timestamp ((game game-double))
+  (game-double-timestamp game))
 
 (defgeneric played-in-game-p (game player))
 
