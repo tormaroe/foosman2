@@ -108,9 +108,11 @@
          (looser2 (player-by-name (game-double-looser-player-2 game)))
          (timestamp (game-double-timestamp game)))
     (update-last-active-timestamp timestamp (list winner1 winner2 looser1 looser2))
-    (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)
-    (award-badges *players* timestamp)
-    (push game *games*)))
+    (let ((score-change (foosman2-core.points-v1:adjust-double-game winner1 winner2 looser1 looser2)))
+      (update-team-mates winner1 winner2 score-change :winners t)
+      (update-team-mates looser1 looser2 score-change :winners nil)
+      (award-badges *players* timestamp)
+      (push game *games*))))
 
 (defun command-add-game-double (winner-name-1 winner-name-2 
                                 looser-name-1 looser-name-2)

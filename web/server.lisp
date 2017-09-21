@@ -108,6 +108,20 @@
   (json-array
     (mapcar #'game-to-json games)))
 
+(defun team-mates-to-json (mates)
+  (json-array
+    (mapcar (lambda (x)
+              (json-object `(("name" . ,(format nil "~s" (team-mate-name x)))
+                             ("won" . ,(team-mate-won x))
+                             ("lost" . ,(team-mate-lost x))
+                             ("points" . ,(reduce #'+ (team-mate-score-changes x))))))
+            mates)))
+
+(defun sorted-team-mate-list (player)
+  (let ((mates (copy-list (hash-table-values (player-team-mates player)))))
+    (sort mates #'>
+          :key #'team-mate-game-count)))
+
 (defun player-to-json (p &key include-details)
   (let ((slots
          `(("name" . ,(format nil "~s" (player-name p)))
@@ -128,11 +142,17 @@
            ("pointsV1Diff5" . ,(player-points-v1-diff p 5))
            ("badgeCount" . ,(length (player-badges p))))))
     (when include-details
-      (push (cons "pointsV1History" (json-array (player-points-v1-history p)))
+      (push (cons "pointsV1History" 
+                  (json-array (player-points-v1-history p)))
             slots)
-      (push (cons "badges" (badges-to-json (player-badges p)))
+      (push (cons "badges" 
+                  (badges-to-json (player-badges p)))
             slots)
-      (push (cons "recentGames" (games-to-json (games-by-player (player-name p) 10)))
+      (push (cons "recentGames"
+                  (games-to-json (games-by-player (player-name p) 10)))
+            slots)
+      (push (cons "teams"
+                  (team-mates-to-json (sorted-team-mate-list p)))
             slots))
     (json-object slots)))
 
@@ -148,6 +168,8 @@
 
 (defun-ajax get-player-details (name) (*ajax-processor* :callback-data :json)
   (log:info name)
+  (setf (hunchentoot:content-type*) "application/json; charset=utf-8")
+  ;; Why is it not needed to set charset in all-players? Have I stored stuff in different encoding?
   (player-to-json (player-by-name name)
                   :include-details t))
 
@@ -329,6 +351,19 @@
                   (:td (str "{{ g.winner }}"))
                   (:td (str "{{ g.looser }}")))))
           )
+          (:div :class "row"
+            (:div :class "col-md-6"
+              (:table :class "table table-sm table-striped"
+                (:tr
+                  (:th (str "Team mate"))
+                  (:th (str "Games won"))
+                  (:th (str "Games lost"))
+                  (:th (str "Points")))
+                (:tr :v-for "t in playerDetails.teams"
+                  (:td (str "{{ t.name }}"))
+                  (:td (str "{{ t.won }}"))
+                  (:td (str "{{ t.lost }}"))
+                  (:td (str "{{ t.points }}"))))))
         )))))
 
 (define-easy-handler (index :uri "/") ()

@@ -23,10 +23,17 @@
            #:player-points-v1-diff
            #:player-badges
            #:player-match-count
+           #:player-team-mates
            #:set-points-v1
            #:player-active-p
            #:update-last-active-timestamp
+           #:update-team-mates
 
+           #:team-mate-name
+           #:team-mate-won
+           #:team-mate-lost
+           #:team-mate-score-changes
+           #:team-mate-game-count
 
            #:game-single
            #:make-game-single

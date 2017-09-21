@@ -94,4 +94,7 @@
             (:huge-underdog-won 10)
             (:small-underdog-won 5))))
     (adjust-players-double-only winner-player-1 looser-player-1 point-amount-to-adjust)
-    (adjust-players-double-only winner-player-2 looser-player-2 point-amount-to-adjust)))
+    (adjust-players-double-only winner-player-2 looser-player-2 point-amount-to-adjust)
+    
+    #| return point change |#
+    point-amount-to-adjust))
