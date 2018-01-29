@@ -139,7 +139,7 @@
            ("pointsV1Min" . ,(player-points-v1-min p))
            ("pointsV1Average" . ,(player-points-v1-average p))
            ("pointsV1Diff" . ,(player-points-v1-diff p))
-           ("pointsV1Diff5" . ,(player-points-v1-diff p 5))
+           ("pointsV1Diff5" . ,(player-points-v1-diff p 6))
            ("badgeCount" . ,(length (player-badges p))))))
     (when include-details
       (push (cons "pointsV1History" 
