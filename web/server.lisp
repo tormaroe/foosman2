@@ -396,7 +396,7 @@
           (new-player-form s)
           (new-game-single-form s)
           (new-game-double-form s)
-          (:div :class "container"
+          (:div :class "container" :v-cloak ""
             (player-details s)
             (match-list s)
             (:div :class "row"
